@@ -18,6 +18,8 @@ class HTMLPurifier_AttrTransform_SafeParam extends HTMLPurifier_AttrTransform {
      * @type string
      */
     public $name = "SafeParam";
+    
+    private $wmode;
 
     /**
      * @type HTMLPurifier_AttrDef_URI
