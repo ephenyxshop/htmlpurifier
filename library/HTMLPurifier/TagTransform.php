@@ -3,8 +3,7 @@
 /**
  * Defines a mutation of an obsolete tag into a valid tag.
  */
-abstract class HTMLPurifier_TagTransform
-{
+abstract class HTMLPurifier_TagTransform {
 
     /**
      * Tag name to transform the tag to.
@@ -27,8 +26,8 @@ abstract class HTMLPurifier_TagTransform
      * @param array $attr Attribute array to process (passed by reference)
      * @param string $css CSS to prepend
      */
-    protected function prependCSS(&$attr, $css)
-    {
+    protected function prependCSS(&$attr, $css) {
+
         $attr['style'] = isset($attr['style']) ? $attr['style'] : '';
         $attr['style'] = $css . $attr['style'];
     }

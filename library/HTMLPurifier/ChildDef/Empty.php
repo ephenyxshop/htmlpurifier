@@ -7,8 +7,8 @@
  *          before child definitions are parsed in earnest by
  *          HTMLPurifier_Strategy_FixNesting.
  */
-class HTMLPurifier_ChildDef_Empty extends HTMLPurifier_ChildDef
-{
+class HTMLPurifier_ChildDef_Empty extends HTMLPurifier_ChildDef {
+
     /**
      * @type bool
      */
@@ -19,9 +19,7 @@ class HTMLPurifier_ChildDef_Empty extends HTMLPurifier_ChildDef
      */
     public $type = 'empty';
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * @param HTMLPurifier_Node[] $children
@@ -29,9 +27,9 @@ class HTMLPurifier_ChildDef_Empty extends HTMLPurifier_ChildDef
      * @param HTMLPurifier_Context $context
      * @return array
      */
-    public function validateChildren($children, $config, $context)
-    {
-        return array();
+    public function validateChildren($children, $config, $context) {
+
+        return [];
     }
 }
 

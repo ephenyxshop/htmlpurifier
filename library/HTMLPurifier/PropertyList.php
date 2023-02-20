@@ -3,13 +3,13 @@
 /**
  * Generic property list implementation
  */
-class HTMLPurifier_PropertyList
-{
+class HTMLPurifier_PropertyList {
+
     /**
      * Internal data-structure for properties.
      * @type array
      */
-    protected $data = array();
+    protected $data = [];
 
     /**
      * Parent plist.
@@ -26,8 +26,8 @@ class HTMLPurifier_PropertyList
     /**
      * @param HTMLPurifier_PropertyList $parent Parent plist
      */
-    public function __construct($parent = null)
-    {
+    public function __construct($parent = null) {
+
         $this->parent = $parent;
     }
 
@@ -36,15 +36,18 @@ class HTMLPurifier_PropertyList
      * @param string $name
      * @throws HTMLPurifier_Exception
      */
-    public function get($name)
-    {
+    public function get($name) {
+
         if ($this->has($name)) {
             return $this->data[$name];
         }
+
         // possible performance bottleneck, convert to iterative if necessary
+
         if ($this->parent) {
             return $this->parent->get($name);
         }
+
         throw new HTMLPurifier_Exception("Key '$name' not found");
     }
 
@@ -53,8 +56,8 @@ class HTMLPurifier_PropertyList
      * @param string $name
      * @param mixed $value
      */
-    public function set($name, $value)
-    {
+    public function set($name, $value) {
+
         $this->data[$name] = $value;
     }
 
@@ -63,8 +66,8 @@ class HTMLPurifier_PropertyList
      * @param string $name
      * @return bool
      */
-    public function has($name)
-    {
+    public function has($name) {
+
         return array_key_exists($name, $this->data);
     }
 
@@ -73,13 +76,14 @@ class HTMLPurifier_PropertyList
      * no value is specified, the entire plist is reset.
      * @param string $name
      */
-    public function reset($name = null)
-    {
+    public function reset($name = null) {
+
         if ($name == null) {
-            $this->data = array();
+            $this->data = [];
         } else {
             unset($this->data[$name]);
         }
+
     }
 
     /**
@@ -88,24 +92,26 @@ class HTMLPurifier_PropertyList
      * @param bool $force If true, ignores the cache and regenerates the array.
      * @return array
      */
-    public function squash($force = false)
-    {
+    public function squash($force = false) {
+
         if ($this->cache !== null && !$force) {
             return $this->cache;
         }
+
         if ($this->parent) {
             return $this->cache = array_merge($this->parent->squash($force), $this->data);
         } else {
             return $this->cache = $this->data;
         }
+
     }
 
     /**
      * Returns the parent plist.
      * @return HTMLPurifier_PropertyList
      */
-    public function getParent()
-    {
+    public function getParent() {
+
         return $this->parent;
     }
 
@@ -113,10 +119,11 @@ class HTMLPurifier_PropertyList
      * Sets the parent plist.
      * @param HTMLPurifier_PropertyList $plist Parent plist
      */
-    public function setParent($plist)
-    {
+    public function setParent($plist) {
+
         $this->parent = $plist;
     }
+
 }
 
 // vim: et sw=4 sts=4

@@ -3,8 +3,8 @@
 /**
  * Validates file as defined by RFC 1630 and RFC 1738.
  */
-class HTMLPurifier_URIScheme_file extends HTMLPurifier_URIScheme
-{
+class HTMLPurifier_URIScheme_file extends HTMLPurifier_URIScheme {
+
     /**
      * Generally file:// URLs are not accessible from most
      * machines, so placing them as an img src is incorrect.
@@ -28,8 +28,8 @@ class HTMLPurifier_URIScheme_file extends HTMLPurifier_URIScheme
      * @param HTMLPurifier_Context $context
      * @return bool
      */
-    public function doValidate(&$uri, $config, $context)
-    {
+    public function doValidate(&$uri, $config, $context) {
+
         // Authentication method is not supported
         $uri->userinfo = null;
         // file:// makes no provisions for accessing the resource

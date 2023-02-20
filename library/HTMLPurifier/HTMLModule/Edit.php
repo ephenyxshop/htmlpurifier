@@ -4,8 +4,7 @@
  * XHTML 1.1 Edit Module, defines editing-related elements. Text Extension
  * Module.
  */
-class HTMLPurifier_HTMLModule_Edit extends HTMLPurifier_HTMLModule
-{
+class HTMLPurifier_HTMLModule_Edit extends HTMLPurifier_HTMLModule {
 
     /**
      * @type string
@@ -15,13 +14,13 @@ class HTMLPurifier_HTMLModule_Edit extends HTMLPurifier_HTMLModule
     /**
      * @param HTMLPurifier_Config $config
      */
-    public function setup($config)
-    {
+    public function setup($config) {
+
         $contents = 'Chameleon: #PCDATA | Inline ! #PCDATA | Flow';
-        $attr = array(
+        $attr = [
             'cite' => 'URI',
             // 'datetime' => 'Datetime', // not implemented
-        );
+        ];
         $this->addElement('del', 'Inline', $contents, 'Common', $attr);
         $this->addElement('ins', 'Inline', $contents, 'Common', $attr);
     }
@@ -42,14 +41,16 @@ class HTMLPurifier_HTMLModule_Edit extends HTMLPurifier_HTMLModule
      * @param HTMLPurifier_ElementDef $def
      * @return HTMLPurifier_ChildDef_Chameleon
      */
-    public function getChildDef($def)
-    {
+    public function getChildDef($def) {
+
         if ($def->content_model_type != 'chameleon') {
             return false;
         }
+
         $value = explode('!', $def->content_model);
         return new HTMLPurifier_ChildDef_Chameleon($value[0], $value[1]);
     }
+
 }
 
 // vim: et sw=4 sts=4

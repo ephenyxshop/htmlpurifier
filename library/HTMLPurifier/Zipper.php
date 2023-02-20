@@ -18,11 +18,12 @@
  * in the list.
  */
 
-class HTMLPurifier_Zipper
-{
+class HTMLPurifier_Zipper {
+
     public $front, $back;
 
     public function __construct($front, $back) {
+
         $this->front = $front;
         $this->back = $back;
     }
@@ -34,9 +35,10 @@ class HTMLPurifier_Zipper
      * @return Tuple of zipper and element of first position.
      */
     static public function fromArray($array) {
-        $z = new self(array(), array_reverse($array));
+
+        $z = new self([], array_reverse($array));
         $t = $z->delete(); // delete the "dummy hole"
-        return array($z, $t);
+        return [$z, $t];
     }
 
     /**
@@ -45,11 +47,17 @@ class HTMLPurifier_Zipper
      * are at the end of the array.)
      */
     public function toArray($t = NULL) {
+
         $a = $this->front;
-        if ($t !== NULL) $a[] = $t;
-        for ($i = count($this->back)-1; $i >= 0; $i--) {
+
+        if ($t !== NULL) {
+            $a[] = $t;
+        }
+
+        for ($i = count($this->back) - 1; $i >= 0; $i--) {
             $a[] = $this->back[$i];
         }
+
         return $a;
     }
 
@@ -59,7 +67,11 @@ class HTMLPurifier_Zipper
      * @return Original contents of new hole.
      */
     public function next($t) {
-        if ($t !== NULL) array_push($this->front, $t);
+
+        if ($t !== NULL) {
+            array_push($this->front, $t);
+        }
+
         return empty($this->back) ? NULL : array_pop($this->back);
     }
 
@@ -70,9 +82,11 @@ class HTMLPurifier_Zipper
      * @return Original contents of new hole, i away
      */
     public function advance($t, $n) {
+
         for ($i = 0; $i < $n; $i++) {
             $t = $this->next($t);
         }
+
         return $t;
     }
 
@@ -82,7 +96,11 @@ class HTMLPurifier_Zipper
      * @return Original contents of new hole.
      */
     public function prev($t) {
-        if ($t !== NULL) array_push($this->back, $t);
+
+        if ($t !== NULL) {
+            array_push($this->back, $t);
+        }
+
         return empty($this->front) ? NULL : array_pop($this->front);
     }
 
@@ -92,6 +110,7 @@ class HTMLPurifier_Zipper
      * @return Original contents of new hole.
      */
     public function delete() {
+
         return empty($this->back) ? NULL : array_pop($this->back);
     }
 
@@ -100,6 +119,7 @@ class HTMLPurifier_Zipper
      * @return bool
      */
     public function done() {
+
         return empty($this->back);
     }
 
@@ -108,7 +128,11 @@ class HTMLPurifier_Zipper
      * @param Element to insert
      */
     public function insertBefore($t) {
-        if ($t !== NULL) array_push($this->front, $t);
+
+        if ($t !== NULL) {
+            array_push($this->front, $t);
+        }
+
     }
 
     /**
@@ -116,7 +140,11 @@ class HTMLPurifier_Zipper
      * @param Element to insert
      */
     public function insertAfter($t) {
-        if ($t !== NULL) array_push($this->back, $t);
+
+        if ($t !== NULL) {
+            array_push($this->back, $t);
+        }
+
     }
 
     /**
@@ -140,18 +168,24 @@ class HTMLPurifier_Zipper
      * @param Current contents of hole.
      */
     public function splice($t, $delete, $replacement) {
+
         // delete
-        $old = array();
+        $old = [];
         $r = $t;
+
         for ($i = $delete; $i > 0; $i--) {
             $old[] = $r;
             $r = $this->delete();
         }
+
         // insert
-        for ($i = count($replacement)-1; $i >= 0; $i--) {
+
+        for ($i = count($replacement) - 1; $i >= 0; $i--) {
             $this->insertAfter($r);
             $r = $replacement[$i];
         }
-        return array($old, $r);
+
+        return [$old, $r];
     }
+
 }

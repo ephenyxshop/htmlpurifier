@@ -3,8 +3,8 @@
 /**
  * Abstract class of a tag token (start, end or empty), and its behavior.
  */
-abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token
-{
+abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token {
+
     /**
      * Static bool marker that indicates the class is a tag.
      *
@@ -28,7 +28,7 @@ abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token
      * Associative array of the tag's attributes.
      * @type array
      */
-    public $attr = array();
+    public $attr = [];
 
     /**
      * Non-overloaded constructor, which lower-cases passed tag name.
@@ -39,21 +39,28 @@ abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token
      * @param int $col
      * @param array $armor
      */
-    public function __construct($name, $attr = array(), $line = null, $col = null, $armor = array())
-    {
+    public function __construct($name, $attr = [], $line = null, $col = null, $armor = []) {
+
         $this->name = ctype_lower($name) ? $name : strtolower($name);
+
         foreach ($attr as $key => $value) {
             // normalization only necessary when key is not lowercase
+
             if (!ctype_lower($key)) {
                 $new_key = strtolower($key);
+
                 if (!isset($attr[$new_key])) {
                     $attr[$new_key] = $attr[$key];
                 }
+
                 if ($new_key !== $key) {
                     unset($attr[$key]);
                 }
+
             }
+
         }
+
         $this->attr = $attr;
         $this->line = $line;
         $this->col = $col;
@@ -61,8 +68,10 @@ abstract class HTMLPurifier_Token_Tag extends HTMLPurifier_Token
     }
 
     public function toNode() {
+
         return new HTMLPurifier_Node_Element($this->name, $this->attr, $this->line, $this->col, $this->armor);
     }
+
 }
 
 // vim: et sw=4 sts=4

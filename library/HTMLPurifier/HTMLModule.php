@@ -15,8 +15,7 @@
  * @todo Consider making some member functions protected
  */
 
-class HTMLPurifier_HTMLModule
-{
+class HTMLPurifier_HTMLModule {
 
     // -- Overloadable ----------------------------------------------------
 
@@ -31,7 +30,7 @@ class HTMLPurifier_HTMLModule
      * Not used in any significant way.
      * @type array
      */
-    public $elements = array();
+    public $elements = [];
 
     /**
      * Associative array of element names to element definitions.
@@ -39,7 +38,7 @@ class HTMLPurifier_HTMLModule
      * with the full definition.
      * @type array
      */
-    public $info = array();
+    public $info = [];
 
     /**
      * Associative array of content set names to content set additions.
@@ -48,7 +47,7 @@ class HTMLPurifier_HTMLModule
      * and NOT info_content_sets member variable of HTMLDefinition.
      * @type array
      */
-    public $content_sets = array();
+    public $content_sets = [];
 
     /**
      * Associative array of attribute collection names to attribute
@@ -59,25 +58,25 @@ class HTMLPurifier_HTMLModule
      * with extra behavior associated with it.
      * @type array
      */
-    public $attr_collections = array();
+    public $attr_collections = [];
 
     /**
      * Associative array of deprecated tag name to HTMLPurifier_TagTransform.
      * @type array
      */
-    public $info_tag_transform = array();
+    public $info_tag_transform = [];
 
     /**
      * List of HTMLPurifier_AttrTransform to be performed before validation.
      * @type array
      */
-    public $info_attr_transform_pre = array();
+    public $info_attr_transform_pre = [];
 
     /**
      * List of HTMLPurifier_AttrTransform to be performed after validation.
      * @type array
      */
-    public $info_attr_transform_post = array();
+    public $info_attr_transform_post = [];
 
     /**
      * List of HTMLPurifier_Injector to be performed during well-formedness fixing.
@@ -86,7 +85,7 @@ class HTMLPurifier_HTMLModule
      * silently disabled.
      * @type array
      */
-    public $info_injector = array();
+    public $info_injector = [];
 
     /**
      * Boolean flag that indicates whether or not getChildDef is implemented.
@@ -120,8 +119,8 @@ class HTMLPurifier_HTMLModule
      * @param HTMLPurifier_ElementDef $def
      * @return HTMLPurifier_ChildDef subclass
      */
-    public function getChildDef($def)
-    {
+    public function getChildDef($def) {
+
         return false;
     }
 
@@ -141,17 +140,19 @@ class HTMLPurifier_HTMLModule
      * @return HTMLPurifier_ElementDef Created element definition object, so you
      *         can set advanced parameters
      */
-    public function addElement($element, $type, $contents, $attr_includes = array(), $attr = array())
-    {
+    public function addElement($element, $type, $contents, $attr_includes = [], $attr = []) {
+
         $this->elements[] = $element;
         // parse content_model
         list($content_model_type, $content_model) = $this->parseContents($contents);
         // merge in attribute inclusions
         $this->mergeInAttrIncludes($attr, $attr_includes);
         // add element to content sets
+
         if ($type) {
             $this->addElementToContentSet($element, $type);
         }
+
         // create element
         $this->info[$element] = HTMLPurifier_ElementDef::create(
             $content_model,
@@ -159,9 +160,11 @@ class HTMLPurifier_HTMLModule
             $attr
         );
         // literal object $contents means direct child manipulation
+
         if (!is_string($contents)) {
             $this->info[$element]->child = $contents;
         }
+
         return $this->info[$element];
     }
 
@@ -171,8 +174,8 @@ class HTMLPurifier_HTMLModule
      * @param string $element Name of element to create
      * @return HTMLPurifier_ElementDef Created element
      */
-    public function addBlankElement($element)
-    {
+    public function addBlankElement($element) {
+
         if (!isset($this->info[$element])) {
             $this->elements[] = $element;
             $this->info[$element] = new HTMLPurifier_ElementDef();
@@ -180,6 +183,7 @@ class HTMLPurifier_HTMLModule
         } else {
             trigger_error("Definition for $element already exists in module, cannot redefine");
         }
+
         return $this->info[$element];
     }
 
@@ -189,13 +193,14 @@ class HTMLPurifier_HTMLModule
      * @param string $type Name content set (warning: case sensitive, usually upper-case
      *        first letter)
      */
-    public function addElementToContentSet($element, $type)
-    {
+    public function addElementToContentSet($element, $type) {
+
         if (!isset($this->content_sets[$type])) {
             $this->content_sets[$type] = '';
         } else {
             $this->content_sets[$type] .= ' | ';
         }
+
         $this->content_sets[$type] .= $element;
     }
 
@@ -209,24 +214,27 @@ class HTMLPurifier_HTMLModule
      *       returned, and the callee needs to take the original $contents
      *       and use it directly.
      */
-    public function parseContents($contents)
-    {
+    public function parseContents($contents) {
+
         if (!is_string($contents)) {
-            return array(null, null);
-        } // defer
-        switch ($contents) {
-            // check for shorthand content model forms
-            case 'Empty':
-                return array('empty', '');
-            case 'Inline':
-                return array('optional', 'Inline | #PCDATA');
-            case 'Flow':
-                return array('optional', 'Flow | #PCDATA');
+            return [null, null];
         }
+        // defer
+
+        switch ($contents) {
+        // check for shorthand content model forms
+        case 'Empty':
+            return ['empty', ''];
+        case 'Inline':
+            return ['optional', 'Inline | #PCDATA'];
+        case 'Flow':
+            return ['optional', 'Flow | #PCDATA'];
+        }
+
         list($content_model_type, $content_model) = explode(':', $contents);
         $content_model_type = strtolower(trim($content_model_type));
         $content_model = trim($content_model);
-        return array($content_model_type, $content_model);
+        return [$content_model_type, $content_model];
     }
 
     /**
@@ -235,15 +243,18 @@ class HTMLPurifier_HTMLModule
      * @param array $attr Reference to attr array to modify
      * @param array $attr_includes Array of includes / string include to merge in
      */
-    public function mergeInAttrIncludes(&$attr, $attr_includes)
-    {
+    public function mergeInAttrIncludes(&$attr, $attr_includes) {
+
         if (!is_array($attr_includes)) {
+
             if (empty($attr_includes)) {
-                $attr_includes = array();
+                $attr_includes = [];
             } else {
-                $attr_includes = array($attr_includes);
+                $attr_includes = [$attr_includes];
             }
+
         }
+
         $attr[0] = $attr_includes;
     }
 
@@ -255,19 +266,25 @@ class HTMLPurifier_HTMLModule
      *       place of the regular argument
      * @return array array equivalent of list
      */
-    public function makeLookup($list)
-    {
+    public function makeLookup($list) {
+
         $args = func_get_args();
+
         if (is_string($list)) {
             $list = $args;
         }
-        $ret = array();
+
+        $ret = [];
+
         foreach ($list as $value) {
+
             if (is_null($value)) {
                 continue;
             }
+
             $ret[$value] = true;
         }
+
         return $ret;
     }
 
@@ -277,9 +294,8 @@ class HTMLPurifier_HTMLModule
      * is available.
      * @param HTMLPurifier_Config $config
      */
-    public function setup($config)
-    {
-    }
+    public function setup($config) {}
+
 }
 
 // vim: et sw=4 sts=4

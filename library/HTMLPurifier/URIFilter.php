@@ -25,8 +25,7 @@
  *          you check that it exists. This allows filters to convert
  *          proprietary URI schemes into regular ones.
  */
-abstract class HTMLPurifier_URIFilter
-{
+abstract class HTMLPurifier_URIFilter {
 
     /**
      * Unique identifier of filter.
@@ -54,8 +53,8 @@ abstract class HTMLPurifier_URIFilter
      * @param HTMLPurifier_Config $config
      * @return bool
      */
-    public function prepare($config)
-    {
+    public function prepare($config) {
+
         return true;
     }
 

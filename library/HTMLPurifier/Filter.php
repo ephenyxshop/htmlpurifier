@@ -19,8 +19,7 @@
  *       for an implementation not to want anything to happen on a step
  */
 
-class HTMLPurifier_Filter
-{
+class HTMLPurifier_Filter {
 
     /**
      * Name of the filter for identification purposes.
@@ -35,8 +34,8 @@ class HTMLPurifier_Filter
      * @param HTMLPurifier_Context $context
      * @return string
      */
-    public function preFilter($html, $config, $context)
-    {
+    public function preFilter($html, $config, $context) {
+
         return $html;
     }
 
@@ -47,8 +46,8 @@ class HTMLPurifier_Filter
      * @param HTMLPurifier_Context $context
      * @return string
      */
-    public function postFilter($html, $config, $context)
-    {
+    public function postFilter($html, $config, $context) {
+
         return $html;
     }
 }

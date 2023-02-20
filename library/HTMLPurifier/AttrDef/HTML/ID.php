@@ -9,8 +9,7 @@
  *          blacklist. If you're hacking around, make sure you use load()!
  */
 
-class HTMLPurifier_AttrDef_HTML_ID extends HTMLPurifier_AttrDef
-{
+class HTMLPurifier_AttrDef_HTML_ID extends HTMLPurifier_AttrDef {
 
     // selector is NOT a valid thing to use for IDREFs, because IDREFs
     // *must* target IDs that exist, whereas selector #ids do not.
@@ -25,8 +24,8 @@ class HTMLPurifier_AttrDef_HTML_ID extends HTMLPurifier_AttrDef
     /**
      * @param bool $selector
      */
-    public function __construct($selector = false)
-    {
+    public function __construct($selector = false) {
+
         $this->selector = $selector;
     }
 
@@ -36,8 +35,8 @@ class HTMLPurifier_AttrDef_HTML_ID extends HTMLPurifier_AttrDef
      * @param HTMLPurifier_Context $context
      * @return bool|string
      */
-    public function validate($id, $config, $context)
-    {
+    public function validate($id, $config, $context) {
+
         if (!$this->selector && !$config->get('Attr.EnableID')) {
             return false;
         }
@@ -49,13 +48,16 @@ class HTMLPurifier_AttrDef_HTML_ID extends HTMLPurifier_AttrDef
         }
 
         $prefix = $config->get('Attr.IDPrefix');
+
         if ($prefix !== '') {
             $prefix .= $config->get('Attr.IDPrefixLocal');
             // prevent re-appending the prefix
+
             if (strpos($id, $prefix) !== 0) {
                 $id = $prefix . $id;
             }
-        } elseif ($config->get('Attr.IDPrefixLocal') !== '') {
+
+        } else if ($config->get('Attr.IDPrefixLocal') !== '') {
             trigger_error(
                 '%Attr.IDPrefixLocal cannot be used unless ' .
                 '%Attr.IDPrefix is set',
@@ -64,37 +66,48 @@ class HTMLPurifier_AttrDef_HTML_ID extends HTMLPurifier_AttrDef
         }
 
         if (!$this->selector) {
-            $id_accumulator =& $context->get('IDAccumulator');
+            $id_accumulator = &$context->get('IDAccumulator');
+
             if (isset($id_accumulator->ids[$id])) {
                 return false;
             }
+
         }
 
         // we purposely avoid using regex, hopefully this is faster
 
         if ($config->get('Attr.ID.HTML5') === true) {
+
             if (preg_match('/[\t\n\x0b\x0c ]/', $id)) {
                 return false;
             }
+
         } else {
+
             if (ctype_alpha($id)) {
                 // OK
             } else {
+
                 if (!ctype_alpha(@$id[0])) {
                     return false;
                 }
+
                 // primitive style of regexps, I suppose
                 $trim = trim(
                     $id,
                     'A..Za..z0..9:-._'
                 );
+
                 if ($trim !== '') {
                     return false;
                 }
+
             }
+
         }
 
         $regexp = $config->get('Attr.IDBlacklistRegexp');
+
         if ($regexp && preg_match($regexp, $id)) {
             return false;
         }
@@ -108,6 +121,7 @@ class HTMLPurifier_AttrDef_HTML_ID extends HTMLPurifier_AttrDef
         //     valid, or return false.
         return $id;
     }
+
 }
 
 // vim: et sw=4 sts=4

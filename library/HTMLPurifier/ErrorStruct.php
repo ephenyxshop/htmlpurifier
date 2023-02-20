@@ -6,16 +6,15 @@
  * to components of what they represent), but their main purpose is to hold
  * errors applying to whatever struct is being used.
  */
-class HTMLPurifier_ErrorStruct
-{
+class HTMLPurifier_ErrorStruct {
 
     /**
      * Possible values for $children first-key. Note that top-level structures
      * are automatically token-level.
      */
-    const TOKEN     = 0;
-    const ATTR      = 1;
-    const CSSPROP   = 2;
+    const TOKEN = 0;
+    const ATTR = 1;
+    const CSSPROP = 2;
 
     /**
      * Type of this struct.
@@ -37,7 +36,7 @@ class HTMLPurifier_ErrorStruct
      * Errors registered for this structure.
      * @type array
      */
-    public $errors = array();
+    public $errors = [];
 
     /**
      * Child ErrorStructs that are from this structure. For example, a TOKEN
@@ -45,19 +44,20 @@ class HTMLPurifier_ErrorStruct
      * array in structure: [TYPE]['identifier']
      * @type array
      */
-    public $children = array();
+    public $children = [];
 
     /**
      * @param string $type
      * @param string $id
      * @return mixed
      */
-    public function getChild($type, $id)
-    {
+    public function getChild($type, $id) {
+
         if (!isset($this->children[$type][$id])) {
             $this->children[$type][$id] = new HTMLPurifier_ErrorStruct();
             $this->children[$type][$id]->type = $type;
         }
+
         return $this->children[$type][$id];
     }
 
@@ -65,10 +65,11 @@ class HTMLPurifier_ErrorStruct
      * @param int $severity
      * @param string $message
      */
-    public function addError($severity, $message)
-    {
-        $this->errors[] = array($severity, $message);
+    public function addError($severity, $message) {
+
+        $this->errors[] = [$severity, $message];
     }
+
 }
 
 // vim: et sw=4 sts=4

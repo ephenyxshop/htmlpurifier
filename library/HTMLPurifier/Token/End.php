@@ -7,8 +7,8 @@
  * is for optimization reasons, as under normal circumstances, the Lexers
  * do not pass attributes.
  */
-class HTMLPurifier_Token_End extends HTMLPurifier_Token_Tag
-{
+class HTMLPurifier_Token_End extends HTMLPurifier_Token_Tag {
+
     /**
      * Token that started this node.
      * Added by MakeWellFormed. Please do not edit this!
@@ -17,6 +17,7 @@ class HTMLPurifier_Token_End extends HTMLPurifier_Token_Tag
     public $start;
 
     public function toNode() {
+
         throw new Exception("HTMLPurifier_Token_End->toNode not supported!");
     }
 }

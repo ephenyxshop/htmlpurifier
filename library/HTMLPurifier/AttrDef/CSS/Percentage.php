@@ -3,8 +3,7 @@
 /**
  * Validates a Percentage as defined by the CSS spec.
  */
-class HTMLPurifier_AttrDef_CSS_Percentage extends HTMLPurifier_AttrDef
-{
+class HTMLPurifier_AttrDef_CSS_Percentage extends HTMLPurifier_AttrDef {
 
     /**
      * Instance to defer number validation to.
@@ -15,8 +14,8 @@ class HTMLPurifier_AttrDef_CSS_Percentage extends HTMLPurifier_AttrDef
     /**
      * @param bool $non_negative Whether to forbid negative values
      */
-    public function __construct($non_negative = false)
-    {
+    public function __construct($non_negative = false) {
+
         $this->number_def = new HTMLPurifier_AttrDef_CSS_Number($non_negative);
     }
 
@@ -26,17 +25,20 @@ class HTMLPurifier_AttrDef_CSS_Percentage extends HTMLPurifier_AttrDef
      * @param HTMLPurifier_Context $context
      * @return bool|string
      */
-    public function validate($string, $config, $context)
-    {
+    public function validate($string, $config, $context) {
+
         $string = $this->parseCDATA($string);
 
         if ($string === '') {
             return false;
         }
+
         $length = strlen($string);
+
         if ($length === 1) {
             return false;
         }
+
         if ($string[$length - 1] !== '%') {
             return false;
         }
@@ -47,8 +49,10 @@ class HTMLPurifier_AttrDef_CSS_Percentage extends HTMLPurifier_AttrDef
         if ($number === false) {
             return false;
         }
+
         return "$number%";
     }
+
 }
 
 // vim: et sw=4 sts=4

@@ -3,8 +3,7 @@
 /**
  * Validates a boolean attribute
  */
-class HTMLPurifier_AttrDef_HTML_Bool extends HTMLPurifier_AttrDef
-{
+class HTMLPurifier_AttrDef_HTML_Bool extends HTMLPurifier_AttrDef {
 
     /**
      * @type string
@@ -19,8 +18,8 @@ class HTMLPurifier_AttrDef_HTML_Bool extends HTMLPurifier_AttrDef
     /**
      * @param bool|string $name
      */
-    public function __construct($name = false)
-    {
+    public function __construct($name = false) {
+
         $this->name = $name;
     }
 
@@ -30,8 +29,8 @@ class HTMLPurifier_AttrDef_HTML_Bool extends HTMLPurifier_AttrDef
      * @param HTMLPurifier_Context $context
      * @return bool|string
      */
-    public function validate($string, $config, $context)
-    {
+    public function validate($string, $config, $context) {
+
         return $this->name;
     }
 
@@ -39,8 +38,8 @@ class HTMLPurifier_AttrDef_HTML_Bool extends HTMLPurifier_AttrDef
      * @param string $string Name of attribute
      * @return HTMLPurifier_AttrDef_HTML_Bool
      */
-    public function make($string)
-    {
+    public function make($string) {
+
         return new HTMLPurifier_AttrDef_HTML_Bool($string);
     }
 }

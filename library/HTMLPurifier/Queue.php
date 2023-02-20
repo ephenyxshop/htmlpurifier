@@ -18,25 +18,30 @@
  * to the output stack and back.
  */
 class HTMLPurifier_Queue {
+
     private $input;
     private $output;
 
-    public function __construct($input = array()) {
+    public function __construct($input = []) {
+
         $this->input = $input;
-        $this->output = array();
+        $this->output = [];
     }
 
     /**
      * Shifts an element off the front of the queue.
      */
     public function shift() {
+
         if (empty($this->output)) {
             $this->output = array_reverse($this->input);
-            $this->input = array();
+            $this->input = [];
         }
+
         if (empty($this->output)) {
             return NULL;
         }
+
         return array_pop($this->output);
     }
 
@@ -44,6 +49,7 @@ class HTMLPurifier_Queue {
      * Pushes an element onto the front of the queue.
      */
     public function push($x) {
+
         array_push($this->input, $x);
     }
 
@@ -51,6 +57,8 @@ class HTMLPurifier_Queue {
      * Checks if it's empty.
      */
     public function isEmpty() {
+
         return empty($this->input) && empty($this->output);
     }
+
 }

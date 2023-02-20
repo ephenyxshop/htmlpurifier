@@ -7,15 +7,15 @@
  * only attached if Attr.TargetBlank is TRUE.  This works regardless
  * of whether or not Attr.AllowedFrameTargets
  */
-class HTMLPurifier_AttrTransform_TargetBlank extends HTMLPurifier_AttrTransform
-{
+class HTMLPurifier_AttrTransform_TargetBlank extends HTMLPurifier_AttrTransform {
+
     /**
      * @type HTMLPurifier_URIParser
      */
     private $parser;
 
-    public function __construct()
-    {
+    public function __construct() {
+
         $this->parser = new HTMLPurifier_URIParser();
     }
 
@@ -25,8 +25,8 @@ class HTMLPurifier_AttrTransform_TargetBlank extends HTMLPurifier_AttrTransform
      * @param HTMLPurifier_Context $context
      * @return array
      */
-    public function transform($attr, $config, $context)
-    {
+    public function transform($attr, $config, $context) {
+
         if (!isset($attr['href'])) {
             return $attr;
         }
@@ -38,8 +38,10 @@ class HTMLPurifier_AttrTransform_TargetBlank extends HTMLPurifier_AttrTransform
         if ($scheme->browsable && !$url->isBenign($config, $context)) {
             $attr['target'] = '_blank';
         }
+
         return $attr;
     }
+
 }
 
 // vim: et sw=4 sts=4

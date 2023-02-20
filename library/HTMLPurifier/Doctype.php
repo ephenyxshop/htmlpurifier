@@ -6,8 +6,8 @@
  * @note This class is inspected by Printer_HTMLDefinition->renderDoctype.
  *       If structure changes, please update that function.
  */
-class HTMLPurifier_Doctype
-{
+class HTMLPurifier_Doctype {
+
     /**
      * Full name of doctype
      * @type string
@@ -19,13 +19,13 @@ class HTMLPurifier_Doctype
      * that this doctype uses
      * @type array
      */
-    public $modules = array();
+    public $modules = [];
 
     /**
      * List of modules to use for tidying up code
      * @type array
      */
-    public $tidyModules = array();
+    public $tidyModules = [];
 
     /**
      * Is the language derived from XML (i.e. XHTML)?
@@ -37,7 +37,7 @@ class HTMLPurifier_Doctype
      * List of aliases for this doctype
      * @type array
      */
-    public $aliases = array();
+    public $aliases = [];
 
     /**
      * Public DTD identifier
@@ -54,19 +54,20 @@ class HTMLPurifier_Doctype
     public function __construct(
         $name = null,
         $xml = true,
-        $modules = array(),
-        $tidyModules = array(),
-        $aliases = array(),
+        $modules = [],
+        $tidyModules = [],
+        $aliases = [],
         $dtd_public = null,
         $dtd_system = null
     ) {
-        $this->name         = $name;
-        $this->xml          = $xml;
-        $this->modules      = $modules;
-        $this->tidyModules  = $tidyModules;
-        $this->aliases      = $aliases;
-        $this->dtdPublic    = $dtd_public;
-        $this->dtdSystem    = $dtd_system;
+
+        $this->name = $name;
+        $this->xml = $xml;
+        $this->modules = $modules;
+        $this->tidyModules = $tidyModules;
+        $this->aliases = $aliases;
+        $this->dtdPublic = $dtd_public;
+        $this->dtdSystem = $dtd_system;
     }
 }
 

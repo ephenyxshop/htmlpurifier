@@ -4,8 +4,7 @@
  * Parses string representations into their corresponding native PHP
  * variable type. The base implementation does a simple type-check.
  */
-class HTMLPurifier_VarParser
-{
+class HTMLPurifier_VarParser {
 
     const C_STRING = 1;
     const ISTRING = 2;
@@ -23,30 +22,30 @@ class HTMLPurifier_VarParser
      * Lookup table of allowed types. Mainly for backwards compatibility, but
      * also convenient for transforming string type names to the integer constants.
      */
-    public static $types = array(
-        'string' => self::C_STRING,
+    public static $types = [
+        'string'  => self::C_STRING,
         'istring' => self::ISTRING,
-        'text' => self::TEXT,
-        'itext' => self::ITEXT,
-        'int' => self::C_INT,
-        'float' => self::C_FLOAT,
-        'bool' => self::C_BOOL,
-        'lookup' => self::LOOKUP,
-        'list' => self::ALIST,
-        'hash' => self::HASH,
-        'mixed' => self::C_MIXED
-    );
+        'text'    => self::TEXT,
+        'itext'   => self::ITEXT,
+        'int'     => self::C_INT,
+        'float'   => self::C_FLOAT,
+        'bool'    => self::C_BOOL,
+        'lookup'  => self::LOOKUP,
+        'list'    => self::ALIST,
+        'hash'    => self::HASH,
+        'mixed'   => self::C_MIXED,
+    ];
 
     /**
      * Lookup table of types that are string, and can have aliases or
      * allowed value lists.
      */
-    public static $stringTypes = array(
+    public static $stringTypes = [
         self::C_STRING => true,
-        self::ISTRING => true,
-        self::TEXT => true,
-        self::ITEXT => true,
-    );
+        self::ISTRING  => true,
+        self::TEXT     => true,
+        self::ITEXT    => true,
+    ];
 
     /**
      * Validate a variable according to type.
@@ -58,72 +57,97 @@ class HTMLPurifier_VarParser
      * @return string Validated and type-coerced variable
      * @throws HTMLPurifier_VarParserException
      */
-    final public function parse($var, $type, $allow_null = false)
-    {
+    final public function parse($var, $type, $allow_null = false) {
+
         if (is_string($type)) {
+
             if (!isset(HTMLPurifier_VarParser::$types[$type])) {
                 throw new HTMLPurifier_VarParserException("Invalid type '$type'");
             } else {
                 $type = HTMLPurifier_VarParser::$types[$type];
             }
+
         }
+
         $var = $this->parseImplementation($var, $type, $allow_null);
+
         if ($allow_null && $var === null) {
             return null;
         }
+
         // These are basic checks, to make sure nothing horribly wrong
         // happened in our implementations.
+
         switch ($type) {
-            case (self::C_STRING):
-            case (self::ISTRING):
-            case (self::TEXT):
-            case (self::ITEXT):
-                if (!is_string($var)) {
-                    break;
-                }
-                if ($type == self::ISTRING || $type == self::ITEXT) {
-                    $var = strtolower($var);
-                }
-                return $var;
-            case (self::C_INT):
-                if (!is_int($var)) {
-                    break;
-                }
-                return $var;
-            case (self::C_FLOAT):
-                if (!is_float($var)) {
-                    break;
-                }
-                return $var;
-            case (self::C_BOOL):
-                if (!is_bool($var)) {
-                    break;
-                }
-                return $var;
-            case (self::LOOKUP):
-            case (self::ALIST):
-            case (self::HASH):
-                if (!is_array($var)) {
-                    break;
-                }
-                if ($type === self::LOOKUP) {
-                    foreach ($var as $k) {
-                        if ($k !== true) {
-                            $this->error('Lookup table contains value other than true');
-                        }
+        case (self::C_STRING):
+        case (self::ISTRING):
+        case (self::TEXT):
+        case (self::ITEXT):
+
+            if (!is_string($var)) {
+                break;
+            }
+
+            if ($type == self::ISTRING || $type == self::ITEXT) {
+                $var = strtolower($var);
+            }
+
+            return $var;
+        case (self::C_INT):
+
+            if (!is_int($var)) {
+                break;
+            }
+
+            return $var;
+        case (self::C_FLOAT):
+
+            if (!is_float($var)) {
+                break;
+            }
+
+            return $var;
+        case (self::C_BOOL):
+
+            if (!is_bool($var)) {
+                break;
+            }
+
+            return $var;
+        case (self::LOOKUP):
+        case (self::ALIST):
+        case (self::HASH):
+
+            if (!is_array($var)) {
+                break;
+            }
+
+            if ($type === self::LOOKUP) {
+
+                foreach ($var as $k) {
+
+                    if ($k !== true) {
+                        $this->error('Lookup table contains value other than true');
                     }
-                } elseif ($type === self::ALIST) {
-                    $keys = array_keys($var);
-                    if (array_keys($keys) !== $keys) {
-                        $this->error('Indices for list are not uniform');
-                    }
+
                 }
-                return $var;
-            case (self::C_MIXED):
-                return $var;
-            default:
-                $this->errorInconsistent(get_class($this), $type);
+
+            } else if ($type === self::ALIST) {
+                $keys = array_keys($var);
+
+                if (array_keys($keys) !== $keys) {
+                    $this->error('Indices for list are not uniform');
+                }
+
+            }
+
+            return $var;
+        case (self::C_MIXED):
+            return $var;
+        default:
+            $this->errorInconsistent(get_class($this), $type);
         }
+
         $this->errorGeneric($var, $type);
     }
 
@@ -135,8 +159,8 @@ class HTMLPurifier_VarParser
      * @param bool $allow_null
      * @return string
      */
-    protected function parseImplementation($var, $type, $allow_null)
-    {
+    protected function parseImplementation($var, $type, $allow_null) {
+
         return $var;
     }
 
@@ -144,8 +168,8 @@ class HTMLPurifier_VarParser
      * Throws an exception.
      * @throws HTMLPurifier_VarParserException
      */
-    protected function error($msg)
-    {
+    protected function error($msg) {
+
         throw new HTMLPurifier_VarParserException($msg);
     }
 
@@ -158,8 +182,8 @@ class HTMLPurifier_VarParser
      * @param int $type
      * @throws HTMLPurifier_Exception
      */
-    protected function errorInconsistent($class, $type)
-    {
+    protected function errorInconsistent($class, $type) {
+
         throw new HTMLPurifier_Exception(
             "Inconsistency in $class: " . HTMLPurifier_VarParser::getTypeName($type) .
             " not implemented"
@@ -171,8 +195,8 @@ class HTMLPurifier_VarParser
      * @param mixed $var
      * @param int $type
      */
-    protected function errorGeneric($var, $type)
-    {
+    protected function errorGeneric($var, $type) {
+
         $vtype = gettype($var);
         $this->error("Expected type " . HTMLPurifier_VarParser::getTypeName($type) . ", got $vtype");
     }
@@ -181,18 +205,22 @@ class HTMLPurifier_VarParser
      * @param int $type
      * @return string
      */
-    public static function getTypeName($type)
-    {
+    public static function getTypeName($type) {
+
         static $lookup;
+
         if (!$lookup) {
             // Lazy load the alternative lookup table
             $lookup = array_flip(HTMLPurifier_VarParser::$types);
         }
+
         if (!isset($lookup[$type])) {
             return 'unknown';
         }
+
         return $lookup[$type];
     }
+
 }
 
 // vim: et sw=4 sts=4

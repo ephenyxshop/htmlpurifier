@@ -25,8 +25,7 @@
  * You can use ---- to forcibly terminate parsing of a single string-hash;
  * this marker is used in multi string-hashes to delimit boundaries.
  */
-class HTMLPurifier_StringHashParser
-{
+class HTMLPurifier_StringHashParser {
 
     /**
      * @type string
@@ -38,15 +37,18 @@ class HTMLPurifier_StringHashParser
      * @param string $file
      * @return array
      */
-    public function parseFile($file)
-    {
+    public function parseFile($file) {
+
         if (!file_exists($file)) {
             return false;
         }
+
         $fh = fopen($file, 'r');
+
         if (!$fh) {
             return false;
         }
+
         $ret = $this->parseHandle($fh);
         fclose($fh);
         return $ret;
@@ -57,19 +59,23 @@ class HTMLPurifier_StringHashParser
      * @param string $file
      * @return array
      */
-    public function parseMultiFile($file)
-    {
+    public function parseMultiFile($file) {
+
         if (!file_exists($file)) {
             return false;
         }
-        $ret = array();
+
+        $ret = [];
         $fh = fopen($file, 'r');
+
         if (!$fh) {
             return false;
         }
+
         while (!feof($fh)) {
             $ret[] = $this->parseHandle($fh);
         }
+
         fclose($fh);
         return $ret;
     }
@@ -83,54 +89,68 @@ class HTMLPurifier_StringHashParser
      *            block.
      * @return array
      */
-    protected function parseHandle($fh)
-    {
-        $state   = false;
-        $single  = false;
-        $ret     = array();
+    protected function parseHandle($fh) {
+
+        $state = false;
+        $single = false;
+        $ret = [];
+
         do {
             $line = fgets($fh);
+
             if ($line === false) {
                 break;
             }
+
             $line = rtrim($line, "\n\r");
+
             if (!$state && $line === '') {
                 continue;
             }
+
             if ($line === '----') {
                 break;
             }
+
             if (strncmp('--#', $line, 3) === 0) {
                 // Comment
                 continue;
-            } elseif (strncmp('--', $line, 2) === 0) {
+            } else if (strncmp('--', $line, 2) === 0) {
                 // Multiline declaration
                 $state = trim($line, '- ');
+
                 if (!isset($ret[$state])) {
                     $ret[$state] = '';
                 }
+
                 continue;
-            } elseif (!$state) {
+            } else if (!$state) {
                 $single = true;
+
                 if (strpos($line, ':') !== false) {
                     // Single-line declaration
                     list($state, $line) = explode(':', $line, 2);
                     $line = trim($line);
                 } else {
                     // Use default declaration
-                    $state  = $this->default;
+                    $state = $this->default;
                 }
+
             }
+
             if ($single) {
                 $ret[$state] = $line;
                 $single = false;
-                $state  = false;
+                $state = false;
             } else {
                 $ret[$state] .= "$line\n";
             }
+
         } while (!feof($fh));
+
         return $ret;
     }
+
 }
 
 // vim: et sw=4 sts=4

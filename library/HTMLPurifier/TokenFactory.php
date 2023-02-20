@@ -11,8 +11,8 @@
  *       you'd want to use an abstract factory).
  * @todo Port DirectLex to use this
  */
-class HTMLPurifier_TokenFactory
-{
+class HTMLPurifier_TokenFactory {
+
     // p stands for prototype
 
     /**
@@ -43,11 +43,11 @@ class HTMLPurifier_TokenFactory
     /**
      * Generates blank prototypes for cloning.
      */
-    public function __construct()
-    {
-        $this->p_start = new HTMLPurifier_Token_Start('', array());
+    public function __construct() {
+
+        $this->p_start = new HTMLPurifier_Token_Start('', []);
         $this->p_end = new HTMLPurifier_Token_End('');
-        $this->p_empty = new HTMLPurifier_Token_Empty('', array());
+        $this->p_empty = new HTMLPurifier_Token_Empty('', []);
         $this->p_text = new HTMLPurifier_Token_Text('');
         $this->p_comment = new HTMLPurifier_Token_Comment('');
     }
@@ -58,8 +58,8 @@ class HTMLPurifier_TokenFactory
      * @param array $attr Associative array of attributes
      * @return HTMLPurifier_Token_Start Generated HTMLPurifier_Token_Start
      */
-    public function createStart($name, $attr = array())
-    {
+    public function createStart($name, $attr = []) {
+
         $p = clone $this->p_start;
         $p->__construct($name, $attr);
         return $p;
@@ -70,8 +70,8 @@ class HTMLPurifier_TokenFactory
      * @param string $name Tag name
      * @return HTMLPurifier_Token_End Generated HTMLPurifier_Token_End
      */
-    public function createEnd($name)
-    {
+    public function createEnd($name) {
+
         $p = clone $this->p_end;
         $p->__construct($name);
         return $p;
@@ -83,8 +83,8 @@ class HTMLPurifier_TokenFactory
      * @param array $attr Associative array of attributes
      * @return HTMLPurifier_Token_Empty Generated HTMLPurifier_Token_Empty
      */
-    public function createEmpty($name, $attr = array())
-    {
+    public function createEmpty($name, $attr = []) {
+
         $p = clone $this->p_empty;
         $p->__construct($name, $attr);
         return $p;
@@ -95,8 +95,8 @@ class HTMLPurifier_TokenFactory
      * @param string $data Data of text token
      * @return HTMLPurifier_Token_Text Generated HTMLPurifier_Token_Text
      */
-    public function createText($data)
-    {
+    public function createText($data) {
+
         $p = clone $this->p_text;
         $p->__construct($data);
         return $p;
@@ -107,8 +107,8 @@ class HTMLPurifier_TokenFactory
      * @param string $data Data of comment token
      * @return HTMLPurifier_Token_Comment Generated HTMLPurifier_Token_Comment
      */
-    public function createComment($data)
-    {
+    public function createComment($data) {
+
         $p = clone $this->p_comment;
         $p->__construct($data);
         return $p;

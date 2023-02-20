@@ -1,7 +1,6 @@
 <?php
 
-class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCache
-{
+class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCache {
 
     /**
      * Cache object we are decorating
@@ -15,20 +14,18 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
      */
     public $name;
 
-    public function __construct()
-    {
-    }
+    public function __construct() {}
 
     /**
      * Lazy decorator function
      * @param HTMLPurifier_DefinitionCache $cache Reference to cache object to decorate
      * @return HTMLPurifier_DefinitionCache_Decorator
      */
-    public function decorate(&$cache)
-    {
+    public function decorate(&$cache) {
+
         $decorator = $this->copy();
         // reference is necessary for mocks in PHP 4
-        $decorator->cache =& $cache;
+        $decorator->cache = &$cache;
         $decorator->type = $cache->type;
         return $decorator;
     }
@@ -37,8 +34,8 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
      * Cross-compatible clone substitute
      * @return HTMLPurifier_DefinitionCache_Decorator
      */
-    public function copy()
-    {
+    public function copy() {
+
         return new HTMLPurifier_DefinitionCache_Decorator();
     }
 
@@ -47,8 +44,8 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
      * @param HTMLPurifier_Config $config
      * @return mixed
      */
-    public function add($def, $config)
-    {
+    public function add($def, $config) {
+
         return $this->cache->add($def, $config);
     }
 
@@ -57,8 +54,8 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
      * @param HTMLPurifier_Config $config
      * @return mixed
      */
-    public function set($def, $config)
-    {
+    public function set($def, $config) {
+
         return $this->cache->set($def, $config);
     }
 
@@ -67,8 +64,8 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
      * @param HTMLPurifier_Config $config
      * @return mixed
      */
-    public function replace($def, $config)
-    {
+    public function replace($def, $config) {
+
         return $this->cache->replace($def, $config);
     }
 
@@ -76,8 +73,8 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
      * @param HTMLPurifier_Config $config
      * @return mixed
      */
-    public function get($config)
-    {
+    public function get($config) {
+
         return $this->cache->get($config);
     }
 
@@ -85,8 +82,8 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
      * @param HTMLPurifier_Config $config
      * @return mixed
      */
-    public function remove($config)
-    {
+    public function remove($config) {
+
         return $this->cache->remove($config);
     }
 
@@ -94,8 +91,8 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
      * @param HTMLPurifier_Config $config
      * @return mixed
      */
-    public function flush($config)
-    {
+    public function flush($config) {
+
         return $this->cache->flush($config);
     }
 
@@ -103,8 +100,8 @@ class HTMLPurifier_DefinitionCache_Decorator extends HTMLPurifier_DefinitionCach
      * @param HTMLPurifier_Config $config
      * @return mixed
      */
-    public function cleanup($config)
-    {
+    public function cleanup($config) {
+
         return $this->cache->cleanup($config);
     }
 }

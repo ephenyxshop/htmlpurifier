@@ -8,9 +8,7 @@
  * features, such as custom tags, custom parsing of text, etc.
  */
 
-
-abstract class HTMLPurifier_Strategy
-{
+abstract class HTMLPurifier_Strategy {
 
     /**
      * Executes the strategy on the tokens.

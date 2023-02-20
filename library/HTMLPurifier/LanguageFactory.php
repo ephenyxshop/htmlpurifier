@@ -7,8 +7,7 @@
  *       has been entirely rewritten
  * @todo Serialized cache for languages
  */
-class HTMLPurifier_LanguageFactory
-{
+class HTMLPurifier_LanguageFactory {
 
     /**
      * Cache of language code information used to load HTMLPurifier_Language objects.
@@ -22,7 +21,7 @@ class HTMLPurifier_LanguageFactory
      * variables to slurp out of a message file.
      * @type array
      */
-    public $keys = array('fallback', 'messages', 'errorNames');
+    public $keys = ['fallback', 'messages', 'errorNames'];
 
     /**
      * Instance to validate language codes.
@@ -42,13 +41,13 @@ class HTMLPurifier_LanguageFactory
      * Keys whose contents are a hash map and can be merged.
      * @type array
      */
-    protected $mergeable_keys_map = array('messages' => true, 'errorNames' => true);
+    protected $mergeable_keys_map = ['messages' => true, 'errorNames' => true];
 
     /**
      * Keys whose contents are a list and can be merged.
      * @value array lookup
      */
-    protected $mergeable_keys_list = array();
+    protected $mergeable_keys_list = [];
 
     /**
      * Retrieve sole instance of the factory.
@@ -56,15 +55,17 @@ class HTMLPurifier_LanguageFactory
      *                   or bool true to reset to default factory.
      * @return HTMLPurifier_LanguageFactory
      */
-    public static function instance($prototype = null)
-    {
+    public static function instance($prototype = null) {
+
         static $instance = null;
+
         if ($prototype !== null) {
             $instance = $prototype;
-        } elseif ($instance === null || $prototype == true) {
+        } else if ($instance === null || $prototype == true) {
             $instance = new HTMLPurifier_LanguageFactory();
             $instance->setup();
         }
+
         return $instance;
     }
 
@@ -72,8 +73,8 @@ class HTMLPurifier_LanguageFactory
      * Sets up the singleton, much like a constructor
      * @note Prevents people from getting this outside of the singleton
      */
-    public function setup()
-    {
+    public function setup() {
+
         $this->validator = new HTMLPurifier_AttrDef_Lang();
         $this->dir = HTMLPURIFIER_PREFIX . '/HTMLPurifier';
     }
@@ -85,9 +86,10 @@ class HTMLPurifier_LanguageFactory
      * @param bool|string $code Code to override configuration with. Private parameter.
      * @return HTMLPurifier_Language
      */
-    public function create($config, $context, $code = false)
-    {
+    public function create($config, $context, $code = false) {
+
         // validate language code
+
         if ($code === false) {
             $code = $this->validator->validate(
                 $config->get('Core.Language'),
@@ -97,6 +99,7 @@ class HTMLPurifier_LanguageFactory
         } else {
             $code = $this->validator->validate($code, $config, $context);
         }
+
         if ($code === false) {
             $code = 'en'; // malformed code becomes English
         }
@@ -108,7 +111,8 @@ class HTMLPurifier_LanguageFactory
             $lang = new HTMLPurifier_Language($config, $context);
         } else {
             $class = 'HTMLPurifier_Language_' . $pcode;
-            $file  = $this->dir . '/Language/classes/' . $code . '.php';
+            $file = $this->dir . '/Language/classes/' . $code . '.php';
+
             if (file_exists($file) || class_exists($class, false)) {
                 $lang = new $class($config, $context);
             } else {
@@ -117,12 +121,16 @@ class HTMLPurifier_LanguageFactory
                 $fallback = $raw_fallback ? $raw_fallback : 'en';
                 $depth++;
                 $lang = $this->create($config, $context, $fallback);
+
                 if (!$raw_fallback) {
                     $lang->error = true;
                 }
+
                 $depth--;
             }
+
         }
+
         $lang->code = $code;
         return $lang;
     }
@@ -133,8 +141,8 @@ class HTMLPurifier_LanguageFactory
      * @param string $code language code
      * @return string|bool
      */
-    public function getFallbackFor($code)
-    {
+    public function getFallbackFor($code) {
+
         $this->loadLanguage($code);
         return $this->cache[$code]['fallback'];
     }
@@ -143,11 +151,12 @@ class HTMLPurifier_LanguageFactory
      * Loads language into the cache, handles message file and fallbacks
      * @param string $code language code
      */
-    public function loadLanguage($code)
-    {
-        static $languages_seen = array(); // recursion guard
+    public function loadLanguage($code) {
+
+        static $languages_seen = []; // recursion guard
 
         // abort if we've already loaded it
+
         if (isset($this->cache[$code])) {
             return;
         }
@@ -159,19 +168,22 @@ class HTMLPurifier_LanguageFactory
         $fallback = ($code != 'en') ? 'en' : false;
 
         // load primary localisation
+
         if (!file_exists($filename)) {
             // skip the include: will rely solely on fallback
             $filename = $this->dir . '/Language/messages/en.php';
-            $cache = array();
+            $cache = [];
         } else {
             include $filename;
             $cache = compact($this->keys);
         }
 
         // load fallback localisation
+
         if (!empty($fallback)) {
 
             // infinite recursion guard
+
             if (isset($languages_seen[$code])) {
                 trigger_error(
                     'Circular fallback reference in language ' .
@@ -180,6 +192,7 @@ class HTMLPurifier_LanguageFactory
                 );
                 $fallback = 'en';
             }
+
             $language_seen[$code] = true;
 
             // load the fallback recursively
@@ -187,23 +200,30 @@ class HTMLPurifier_LanguageFactory
             $fallback_cache = $this->cache[$fallback];
 
             // merge fallback with current language
+
             foreach ($this->keys as $key) {
+
                 if (isset($cache[$key]) && isset($fallback_cache[$key])) {
+
                     if (isset($this->mergeable_keys_map[$key])) {
                         $cache[$key] = $cache[$key] + $fallback_cache[$key];
-                    } elseif (isset($this->mergeable_keys_list[$key])) {
+                    } else if (isset($this->mergeable_keys_list[$key])) {
                         $cache[$key] = array_merge($fallback_cache[$key], $cache[$key]);
                     }
+
                 } else {
                     $cache[$key] = $fallback_cache[$key];
                 }
+
             }
+
         }
 
         // save to cache for later retrieval
         $this->cache[$code] = $cache;
         return;
     }
+
 }
 
 // vim: et sw=4 sts=4

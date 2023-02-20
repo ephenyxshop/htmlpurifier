@@ -1,7 +1,7 @@
 <?php
 
-class HTMLPurifier_URIFilter_DisableResources extends HTMLPurifier_URIFilter
-{
+class HTMLPurifier_URIFilter_DisableResources extends HTMLPurifier_URIFilter {
+
     /**
      * @type string
      */
@@ -13,8 +13,8 @@ class HTMLPurifier_URIFilter_DisableResources extends HTMLPurifier_URIFilter
      * @param HTMLPurifier_Context $context
      * @return bool
      */
-    public function filter(&$uri, $config, $context)
-    {
+    public function filter(&$uri, $config, $context) {
+
         return !$context->get('EmbeddedURI', true);
     }
 }

@@ -5,8 +5,8 @@
  * @warning Users will commonly use <embed> to cater to legacy browsers: this
  *      module does not allow this sort of behavior
  */
-class HTMLPurifier_HTMLModule_Object extends HTMLPurifier_HTMLModule
-{
+class HTMLPurifier_HTMLModule_Object extends HTMLPurifier_HTMLModule {
+
     /**
      * @type string
      */
@@ -20,27 +20,27 @@ class HTMLPurifier_HTMLModule_Object extends HTMLPurifier_HTMLModule
     /**
      * @param HTMLPurifier_Config $config
      */
-    public function setup($config)
-    {
+    public function setup($config) {
+
         $this->addElement(
             'object',
             'Inline',
             'Optional: #PCDATA | Flow | param',
             'Common',
-            array(
-                'archive' => 'URI',
-                'classid' => 'URI',
+            [
+                'archive'  => 'URI',
+                'classid'  => 'URI',
                 'codebase' => 'URI',
                 'codetype' => 'Text',
-                'data' => 'URI',
-                'declare' => 'Bool#declare',
-                'height' => 'Length',
-                'name' => 'CDATA',
-                'standby' => 'Text',
+                'data'     => 'URI',
+                'declare'  => 'Bool#declare',
+                'height'   => 'Length',
+                'name'     => 'CDATA',
+                'standby'  => 'Text',
                 'tabindex' => 'Number',
-                'type' => 'ContentType',
-                'width' => 'Length'
-            )
+                'type'     => 'ContentType',
+                'width'    => 'Length',
+            ]
         );
 
         $this->addElement(
@@ -48,13 +48,13 @@ class HTMLPurifier_HTMLModule_Object extends HTMLPurifier_HTMLModule
             false,
             'Empty',
             null,
-            array(
-                'id' => 'ID',
-                'name*' => 'Text',
-                'type' => 'Text',
-                'value' => 'Text',
-                'valuetype' => 'Enum#data,ref,object'
-            )
+            [
+                'id'        => 'ID',
+                'name*'     => 'Text',
+                'type'      => 'Text',
+                'value'     => 'Text',
+                'valuetype' => 'Enum#data,ref,object',
+            ]
         );
     }
 }

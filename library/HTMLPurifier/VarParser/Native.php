@@ -5,8 +5,7 @@
  * this, it can represent all inputs; however, it is dangerous and cannot
  * be used by users.
  */
-class HTMLPurifier_VarParser_Native extends HTMLPurifier_VarParser
-{
+class HTMLPurifier_VarParser_Native extends HTMLPurifier_VarParser {
 
     /**
      * @param mixed $var
@@ -14,8 +13,8 @@ class HTMLPurifier_VarParser_Native extends HTMLPurifier_VarParser
      * @param bool $allow_null
      * @return null|string
      */
-    protected function parseImplementation($var, $type, $allow_null)
-    {
+    protected function parseImplementation($var, $type, $allow_null) {
+
         return $this->evalExpression($var);
     }
 
@@ -24,15 +23,18 @@ class HTMLPurifier_VarParser_Native extends HTMLPurifier_VarParser
      * @return mixed
      * @throws HTMLPurifier_VarParserException
      */
-    protected function evalExpression($expr)
-    {
+    protected function evalExpression($expr) {
+
         $var = null;
         $result = eval("\$var = $expr;");
+
         if ($result === false) {
             throw new HTMLPurifier_VarParserException("Fatal error in evaluated code");
         }
+
         return $var;
     }
+
 }
 
 // vim: et sw=4 sts=4

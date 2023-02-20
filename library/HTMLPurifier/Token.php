@@ -3,8 +3,8 @@
 /**
  * Abstract base token class that all others inherit from.
  */
-abstract class HTMLPurifier_Token
-{
+abstract class HTMLPurifier_Token {
+
     /**
      * Line number node was on in source document. Null if unknown.
      * @type int
@@ -23,7 +23,7 @@ abstract class HTMLPurifier_Token
      * "MakeWellFormed_TagClosedError"
      * @type array
      */
-    public $armor = array();
+    public $armor = [];
 
     /**
      * Used during MakeWellFormed.  See Note [Injector skips]
@@ -45,25 +45,28 @@ abstract class HTMLPurifier_Token
      * @param string $n
      * @return null|string
      */
-    public function __get($n)
-    {
+    public function __get($n) {
+
         if ($n === 'type') {
             trigger_error('Deprecated type property called; use instanceof', E_USER_NOTICE);
+
             switch (get_class($this)) {
-                case 'HTMLPurifier_Token_Start':
-                    return 'start';
-                case 'HTMLPurifier_Token_Empty':
-                    return 'empty';
-                case 'HTMLPurifier_Token_End':
-                    return 'end';
-                case 'HTMLPurifier_Token_Text':
-                    return 'text';
-                case 'HTMLPurifier_Token_Comment':
-                    return 'comment';
-                default:
-                    return null;
+            case 'HTMLPurifier_Token_Start':
+                return 'start';
+            case 'HTMLPurifier_Token_Empty':
+                return 'empty';
+            case 'HTMLPurifier_Token_End':
+                return 'end';
+            case 'HTMLPurifier_Token_Text':
+                return 'text';
+            case 'HTMLPurifier_Token_Comment':
+                return 'comment';
+            default:
+                return null;
             }
+
         }
+
     }
 
     /**
@@ -71,8 +74,8 @@ abstract class HTMLPurifier_Token
      * @param int $l
      * @param int $c
      */
-    public function position($l = null, $c = null)
-    {
+    public function position($l = null, $c = null) {
+
         $this->line = $l;
         $this->col = $c;
     }
@@ -82,11 +85,12 @@ abstract class HTMLPurifier_Token
      * @param int $l
      * @param int $c
      */
-    public function rawPosition($l, $c)
-    {
+    public function rawPosition($l, $c) {
+
         if ($c === -1) {
             $l++;
         }
+
         $this->line = $l;
         $this->col = $c;
     }

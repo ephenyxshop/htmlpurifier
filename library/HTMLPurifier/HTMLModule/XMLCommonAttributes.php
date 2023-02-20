@@ -1,7 +1,7 @@
 <?php
 
-class HTMLPurifier_HTMLModule_XMLCommonAttributes extends HTMLPurifier_HTMLModule
-{
+class HTMLPurifier_HTMLModule_XMLCommonAttributes extends HTMLPurifier_HTMLModule {
+
     /**
      * @type string
      */
@@ -10,11 +10,11 @@ class HTMLPurifier_HTMLModule_XMLCommonAttributes extends HTMLPurifier_HTMLModul
     /**
      * @type array
      */
-    public $attr_collections = array(
-        'Lang' => array(
+    public $attr_collections = [
+        'Lang' => [
             'xml:lang' => 'LanguageCode',
-        )
-    );
+        ],
+    ];
 }
 
 // vim: et sw=4 sts=4

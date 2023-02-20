@@ -10,8 +10,7 @@
  *       We have chosen not to heed this distinction, as content_sets
  *       provides satisfactory disambiguation.
  */
-class HTMLPurifier_HTMLModule_Presentation extends HTMLPurifier_HTMLModule
-{
+class HTMLPurifier_HTMLModule_Presentation extends HTMLPurifier_HTMLModule {
 
     /**
      * @type string
@@ -21,8 +20,8 @@ class HTMLPurifier_HTMLModule_Presentation extends HTMLPurifier_HTMLModule
     /**
      * @param HTMLPurifier_Config $config
      */
-    public function setup($config)
-    {
+    public function setup($config) {
+
         $this->addElement('hr', 'Block', 'Empty', 'Common');
         $this->addElement('sub', 'Inline', 'Inline', 'Common');
         $this->addElement('sup', 'Inline', 'Inline', 'Common');

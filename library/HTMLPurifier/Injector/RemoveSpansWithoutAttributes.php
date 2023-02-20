@@ -3,8 +3,8 @@
 /**
  * Injector that removes spans with no attributes
  */
-class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends HTMLPurifier_Injector
-{
+class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends HTMLPurifier_Injector {
+
     /**
      * @type string
      */
@@ -13,7 +13,7 @@ class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends HTMLPurifier_In
     /**
      * @type array
      */
-    public $needed = array('span');
+    public $needed = ['span'];
 
     /**
      * @type HTMLPurifier_AttrValidator
@@ -31,8 +31,8 @@ class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends HTMLPurifier_In
      */
     private $context;
 
-    public function prepare($config, $context)
-    {
+    public function prepare($config, $context) {
+
         $this->attrValidator = new HTMLPurifier_AttrValidator();
         $this->config = $config;
         $this->context = $context;
@@ -42,8 +42,8 @@ class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends HTMLPurifier_In
     /**
      * @param HTMLPurifier_Token $token
      */
-    public function handleElement(&$token)
-    {
+    public function handleElement(&$token) {
+
         if ($token->name !== 'span' || !$token instanceof HTMLPurifier_Token_Start) {
             return;
         }
@@ -59,6 +59,7 @@ class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends HTMLPurifier_In
         }
 
         $nesting = 0;
+
         while ($this->forwardUntilEndToken($i, $current, $nesting)) {
         }
 
@@ -68,17 +69,20 @@ class HTMLPurifier_Injector_RemoveSpansWithoutAttributes extends HTMLPurifier_In
             // Delete open span tag
             $token = false;
         }
+
     }
 
     /**
      * @param HTMLPurifier_Token $token
      */
-    public function handleEnd(&$token)
-    {
+    public function handleEnd(&$token) {
+
         if ($token->markForDeletion) {
             $token = false;
         }
+
     }
+
 }
 
 // vim: et sw=4 sts=4

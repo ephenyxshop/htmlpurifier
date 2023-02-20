@@ -9,8 +9,8 @@
  * @todo Filter allowed query parameters
  */
 
-class HTMLPurifier_URIScheme_mailto extends HTMLPurifier_URIScheme
-{
+class HTMLPurifier_URIScheme_mailto extends HTMLPurifier_URIScheme {
+
     /**
      * @type bool
      */
@@ -27,11 +27,11 @@ class HTMLPurifier_URIScheme_mailto extends HTMLPurifier_URIScheme
      * @param HTMLPurifier_Context $context
      * @return bool
      */
-    public function doValidate(&$uri, $config, $context)
-    {
+    public function doValidate(&$uri, $config, $context) {
+
         $uri->userinfo = null;
-        $uri->host     = null;
-        $uri->port     = null;
+        $uri->host = null;
+        $uri->port = null;
         // we need to validate path against RFC 2368's addr-spec
         return true;
     }

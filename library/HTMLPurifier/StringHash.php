@@ -8,12 +8,12 @@
  *     of PHP 5, you must not use the $hash[$key] syntax; if you do
  *     our version of offsetGet is never called.
  */
-class HTMLPurifier_StringHash extends ArrayObject
-{
+class HTMLPurifier_StringHash extends ArrayObject {
+
     /**
      * @type array
      */
-    protected $accessed = array();
+    protected $accessed = [];
 
     /**
      * Retrieves a value, and logs the access.
@@ -21,8 +21,8 @@ class HTMLPurifier_StringHash extends ArrayObject
      * @return mixed
      */
     #[\ReturnTypeWillChange]
-    public function offsetGet($index)
-    {
+    public function offsetGet($index) {
+
         $this->accessed[$index] = true;
         return parent::offsetGet($index);
     }
@@ -31,17 +31,17 @@ class HTMLPurifier_StringHash extends ArrayObject
      * Returns a lookup array of all array indexes that have been accessed.
      * @return array in form array($index => true).
      */
-    public function getAccessed()
-    {
+    public function getAccessed() {
+
         return $this->accessed;
     }
 
     /**
      * Resets the access array.
      */
-    public function resetAccessed()
-    {
-        $this->accessed = array();
+    public function resetAccessed() {
+
+        $this->accessed = [];
     }
 }
 

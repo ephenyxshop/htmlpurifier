@@ -1,7 +1,7 @@
 <?php
 
-class HTMLPurifier_URIFilter_DisableExternalResources extends HTMLPurifier_URIFilter_DisableExternal
-{
+class HTMLPurifier_URIFilter_DisableExternalResources extends HTMLPurifier_URIFilter_DisableExternal {
+
     /**
      * @type string
      */
@@ -13,13 +13,15 @@ class HTMLPurifier_URIFilter_DisableExternalResources extends HTMLPurifier_URIFi
      * @param HTMLPurifier_Context $context
      * @return bool
      */
-    public function filter(&$uri, $config, $context)
-    {
+    public function filter(&$uri, $config, $context) {
+
         if (!$context->get('EmbeddedURI', true)) {
             return true;
         }
+
         return parent::filter($uri, $config, $context);
     }
+
 }
 
 // vim: et sw=4 sts=4

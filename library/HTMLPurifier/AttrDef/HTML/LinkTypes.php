@@ -6,8 +6,7 @@
  *       values.
  * @note Assumes link types are ASCII text
  */
-class HTMLPurifier_AttrDef_HTML_LinkTypes extends HTMLPurifier_AttrDef
-{
+class HTMLPurifier_AttrDef_HTML_LinkTypes extends HTMLPurifier_AttrDef {
 
     /**
      * Name config attribute to pull.
@@ -18,12 +17,13 @@ class HTMLPurifier_AttrDef_HTML_LinkTypes extends HTMLPurifier_AttrDef
     /**
      * @param string $name
      */
-    public function __construct($name)
-    {
-        $configLookup = array(
+    public function __construct($name) {
+
+        $configLookup = [
             'rel' => 'AllowedRel',
-            'rev' => 'AllowedRev'
-        );
+            'rev' => 'AllowedRev',
+        ];
+
         if (!isset($configLookup[$name])) {
             trigger_error(
                 'Unrecognized attribute name for link ' .
@@ -32,6 +32,7 @@ class HTMLPurifier_AttrDef_HTML_LinkTypes extends HTMLPurifier_AttrDef
             );
             return;
         }
+
         $this->name = $configLookup[$name];
     }
 
@@ -41,9 +42,10 @@ class HTMLPurifier_AttrDef_HTML_LinkTypes extends HTMLPurifier_AttrDef
      * @param HTMLPurifier_Context $context
      * @return bool|string
      */
-    public function validate($string, $config, $context)
-    {
+    public function validate($string, $config, $context) {
+
         $allowed = $config->get('Attr.' . $this->name);
+
         if (empty($allowed)) {
             return false;
         }
@@ -52,21 +54,26 @@ class HTMLPurifier_AttrDef_HTML_LinkTypes extends HTMLPurifier_AttrDef
         $parts = explode(' ', $string);
 
         // lookup to prevent duplicates
-        $ret_lookup = array();
+        $ret_lookup = [];
+
         foreach ($parts as $part) {
             $part = strtolower(trim($part));
+
             if (!isset($allowed[$part])) {
                 continue;
             }
+
             $ret_lookup[$part] = true;
         }
 
         if (empty($ret_lookup)) {
             return false;
         }
+
         $string = implode(' ', array_keys($ret_lookup));
         return $string;
     }
+
 }
 
 // vim: et sw=4 sts=4

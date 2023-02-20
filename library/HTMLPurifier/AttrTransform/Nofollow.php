@@ -6,15 +6,15 @@
  * Adds rel="nofollow" to all outbound links.  This transform is
  * only attached if Attr.Nofollow is TRUE.
  */
-class HTMLPurifier_AttrTransform_Nofollow extends HTMLPurifier_AttrTransform
-{
+class HTMLPurifier_AttrTransform_Nofollow extends HTMLPurifier_AttrTransform {
+
     /**
      * @type HTMLPurifier_URIParser
      */
     private $parser;
 
-    public function __construct()
-    {
+    public function __construct() {
+
         $this->parser = new HTMLPurifier_URIParser();
     }
 
@@ -24,8 +24,8 @@ class HTMLPurifier_AttrTransform_Nofollow extends HTMLPurifier_AttrTransform
      * @param HTMLPurifier_Context $context
      * @return array
      */
-    public function transform($attr, $config, $context)
-    {
+    public function transform($attr, $config, $context) {
+
         if (!isset($attr['href'])) {
             return $attr;
         }
@@ -35,18 +35,24 @@ class HTMLPurifier_AttrTransform_Nofollow extends HTMLPurifier_AttrTransform
         $scheme = $url->getSchemeObj($config, $context);
 
         if ($scheme->browsable && !$url->isLocal($config, $context)) {
+
             if (isset($attr['rel'])) {
                 $rels = explode(' ', $attr['rel']);
+
                 if (!in_array('nofollow', $rels)) {
                     $rels[] = 'nofollow';
                 }
+
                 $attr['rel'] = implode(' ', $rels);
             } else {
                 $attr['rel'] = 'nofollow';
             }
+
         }
+
         return $attr;
     }
+
 }
 
 // vim: et sw=4 sts=4

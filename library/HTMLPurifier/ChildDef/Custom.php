@@ -6,8 +6,8 @@
  * @warning Currently this class is an all or nothing proposition, that is,
  *          it will only give a bool return value.
  */
-class HTMLPurifier_ChildDef_Custom extends HTMLPurifier_ChildDef
-{
+class HTMLPurifier_ChildDef_Custom extends HTMLPurifier_ChildDef {
+
     /**
      * @type string
      */
@@ -33,8 +33,8 @@ class HTMLPurifier_ChildDef_Custom extends HTMLPurifier_ChildDef
     /**
      * @param $dtd_regex Allowed child pattern from the DTD
      */
-    public function __construct($dtd_regex)
-    {
+    public function __construct($dtd_regex) {
+
         $this->dtd_regex = $dtd_regex;
         $this->_compileRegex();
     }
@@ -42,12 +42,14 @@ class HTMLPurifier_ChildDef_Custom extends HTMLPurifier_ChildDef
     /**
      * Compiles the PCRE regex from a DTD regex ($dtd_regex to $_pcre_regex)
      */
-    protected function _compileRegex()
-    {
+    protected function _compileRegex() {
+
         $raw = str_replace(' ', '', $this->dtd_regex);
+
         if ($raw[0] != '(') {
             $raw = "($raw)";
         }
+
         $el = '[#a-zA-Z0-9_.-]+';
         $reg = $raw;
 
@@ -56,6 +58,7 @@ class HTMLPurifier_ChildDef_Custom extends HTMLPurifier_ChildDef
 
         // collect all elements into the $elements array
         preg_match_all("/$el/", $reg, $matches);
+
         foreach ($matches[0] as $match) {
             $this->elements[$match] = true;
         }
@@ -78,25 +81,30 @@ class HTMLPurifier_ChildDef_Custom extends HTMLPurifier_ChildDef
      * @param HTMLPurifier_Context $context
      * @return bool
      */
-    public function validateChildren($children, $config, $context)
-    {
+    public function validateChildren($children, $config, $context) {
+
         $list_of_children = '';
         $nesting = 0; // depth into the nest
+
         foreach ($children as $node) {
+
             if (!empty($node->is_whitespace)) {
                 continue;
             }
+
             $list_of_children .= $node->name . ',';
         }
+
         // add leading comma to deal with stray comma declarations
         $list_of_children = ',' . rtrim($list_of_children, ',');
         $okay =
             preg_match(
-                '/^,?' . $this->_pcre_regex . '$/',
-                $list_of_children
-            );
-        return (bool)$okay;
+            '/^,?' . $this->_pcre_regex . '$/',
+            $list_of_children
+        );
+        return (bool) $okay;
     }
+
 }
 
 // vim: et sw=4 sts=4

@@ -3,8 +3,8 @@
 /**
  * Takes the contents of blockquote when in strict and reformats for validation.
  */
-class HTMLPurifier_ChildDef_StrictBlockquote extends HTMLPurifier_ChildDef_Required
-{
+class HTMLPurifier_ChildDef_StrictBlockquote extends HTMLPurifier_ChildDef_Required {
+
     /**
      * @type array
      */
@@ -36,8 +36,8 @@ class HTMLPurifier_ChildDef_StrictBlockquote extends HTMLPurifier_ChildDef_Requi
      * @note We don't want MakeWellFormed to auto-close inline elements since
      *       they might be allowed.
      */
-    public function getAllowedElements($config)
-    {
+    public function getAllowedElements($config) {
+
         $this->init($config);
         return $this->fake_elements;
     }
@@ -48,8 +48,8 @@ class HTMLPurifier_ChildDef_StrictBlockquote extends HTMLPurifier_ChildDef_Requi
      * @param HTMLPurifier_Context $context
      * @return array
      */
-    public function validateChildren($children, $config, $context)
-    {
+    public function validateChildren($children, $config, $context) {
+
         $this->init($config);
 
         // trick the parent class into thinking it allows more
@@ -58,8 +58,9 @@ class HTMLPurifier_ChildDef_StrictBlockquote extends HTMLPurifier_ChildDef_Requi
         $this->elements = $this->real_elements;
 
         if ($result === false) {
-            return array();
+            return [];
         }
+
         if ($result === true) {
             $result = $children;
         }
@@ -67,35 +68,43 @@ class HTMLPurifier_ChildDef_StrictBlockquote extends HTMLPurifier_ChildDef_Requi
         $def = $config->getHTMLDefinition();
         $block_wrap_name = $def->info_block_wrapper;
         $block_wrap = false;
-        $ret = array();
+        $ret = [];
 
         foreach ($result as $node) {
+
             if ($block_wrap === false) {
+
                 if (($node instanceof HTMLPurifier_Node_Text && !$node->is_whitespace) ||
                     ($node instanceof HTMLPurifier_Node_Element && !isset($this->elements[$node->name]))) {
-                        $block_wrap = new HTMLPurifier_Node_Element($def->info_block_wrapper);
-                        $ret[] = $block_wrap;
+                    $block_wrap = new HTMLPurifier_Node_Element($def->info_block_wrapper);
+                    $ret[] = $block_wrap;
                 }
+
             } else {
+
                 if ($node instanceof HTMLPurifier_Node_Element && isset($this->elements[$node->name])) {
                     $block_wrap = false;
 
                 }
+
             }
+
             if ($block_wrap) {
                 $block_wrap->children[] = $node;
             } else {
                 $ret[] = $node;
             }
+
         }
+
         return $ret;
     }
 
     /**
      * @param HTMLPurifier_Config $config
      */
-    private function init($config)
-    {
+    private function init($config) {
+
         if (!$this->init) {
             $def = $config->getHTMLDefinition();
             // allow all inline elements
@@ -104,7 +113,9 @@ class HTMLPurifier_ChildDef_StrictBlockquote extends HTMLPurifier_ChildDef_Requi
             $this->fake_elements['#PCDATA'] = true;
             $this->init = true;
         }
+
     }
+
 }
 
 // vim: et sw=4 sts=4

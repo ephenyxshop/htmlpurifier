@@ -8,8 +8,8 @@
  *       via a configuration directive
  * @todo Implement memcached
  */
-abstract class HTMLPurifier_DefinitionCache
-{
+abstract class HTMLPurifier_DefinitionCache {
+
     /**
      * @type string
      */
@@ -19,8 +19,8 @@ abstract class HTMLPurifier_DefinitionCache
      * @param string $type Type of definition objects this instance of the
      *      cache will handle.
      */
-    public function __construct($type)
-    {
+    public function __construct($type) {
+
         $this->type = $type;
     }
 
@@ -29,11 +29,11 @@ abstract class HTMLPurifier_DefinitionCache
      * @param HTMLPurifier_Config $config Instance of HTMLPurifier_Config
      * @return string
      */
-    public function generateKey($config)
-    {
+    public function generateKey($config) {
+
         return $config->version . ',' . // possibly replace with function calls
-               $config->getBatchSerial($this->type) . ',' .
-               $config->get($this->type . '.DefinitionRev');
+        $config->getBatchSerial($this->type) . ',' .
+        $config->get($this->type . '.DefinitionRev');
     }
 
     /**
@@ -43,22 +43,27 @@ abstract class HTMLPurifier_DefinitionCache
      * @param HTMLPurifier_Config $config Instance of HTMLPurifier_Config to test against
      * @return bool
      */
-    public function isOld($key, $config)
-    {
+    public function isOld($key, $config) {
+
         if (substr_count($key, ',') < 2) {
             return true;
         }
+
         list($version, $hash, $revision) = explode(',', $key, 3);
         $compare = version_compare($version, $config->version);
         // version mismatch, is always old
+
         if ($compare != 0) {
             return true;
         }
+
         // versions match, ids match, check revision number
+
         if ($hash == $config->getBatchSerial($this->type) &&
             $revision < $config->get($this->type . '.DefinitionRev')) {
             return true;
         }
+
         return false;
     }
 
@@ -68,12 +73,13 @@ abstract class HTMLPurifier_DefinitionCache
      * @param HTMLPurifier_Definition $def Definition object to check
      * @return bool true if good, false if not
      */
-    public function checkDefType($def)
-    {
+    public function checkDefType($def) {
+
         if ($def->type !== $this->type) {
             trigger_error("Cannot use definition of type {$def->type} in cache for {$this->type}");
             return false;
         }
+
         return true;
     }
 

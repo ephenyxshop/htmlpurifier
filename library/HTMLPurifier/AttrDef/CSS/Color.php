@@ -3,16 +3,15 @@
 /**
  * Validates Color as defined by CSS.
  */
-class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
-{
+class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef {
 
     /**
      * @type HTMLPurifier_AttrDef_CSS_AlphaValue
      */
     protected $alpha;
 
-    public function __construct()
-    {
+    public function __construct() {
+
         $this->alpha = new HTMLPurifier_AttrDef_CSS_AlphaValue();
     }
 
@@ -22,25 +21,29 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
      * @param HTMLPurifier_Context $context
      * @return bool|string
      */
-    public function validate($color, $config, $context)
-    {
+    public function validate($color, $config, $context) {
+
         static $colors = null;
+
         if ($colors === null) {
             $colors = $config->get('Core.ColorKeywords');
         }
 
         $color = trim($color);
+
         if ($color === '') {
             return false;
         }
 
         $lower = strtolower($color);
+
         if (isset($colors[$lower])) {
             return $colors[$lower];
         }
 
         if (preg_match('#(rgb|rgba|hsl|hsla)\(#', $color, $matches) === 1) {
             $length = strlen($color);
+
             if (strpos($color, ')') !== $length - 1) {
                 return false;
             }
@@ -50,40 +53,42 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
 
             $parameters_size = 3;
             $alpha_channel = false;
+
             if (substr($function, -1) === 'a') {
                 $parameters_size = 4;
                 $alpha_channel = true;
             }
 
             /*
-             * Allowed types for values :
-             * parameter_position => [type => max_value]
-             */
-            $allowed_types = array(
-                1 => array('percentage' => 100, 'integer' => 255),
-                2 => array('percentage' => 100, 'integer' => 255),
-                3 => array('percentage' => 100, 'integer' => 255),
-            );
+                             * Allowed types for values :
+                             * parameter_position => [type => max_value]
+            */
+            $allowed_types = [
+                1 => ['percentage' => 100, 'integer' => 255],
+                2 => ['percentage' => 100, 'integer' => 255],
+                3 => ['percentage' => 100, 'integer' => 255],
+            ];
             $allow_different_types = false;
 
             if (strpos($function, 'hsl') !== false) {
-                $allowed_types = array(
-                    1 => array('integer' => 360),
-                    2 => array('percentage' => 100),
-                    3 => array('percentage' => 100),
-                );
+                $allowed_types = [
+                    1 => ['integer' => 360],
+                    2 => ['percentage' => 100],
+                    3 => ['percentage' => 100],
+                ];
                 $allow_different_types = true;
             }
 
             $values = trim(str_replace($function, '', $color), ' ()');
 
             $parts = explode(',', $values);
+
             if (count($parts) !== $parameters_size) {
                 return false;
             }
 
             $type = false;
-            $new_parts = array();
+            $new_parts = [];
             $i = 0;
 
             foreach ($parts as $part) {
@@ -95,6 +100,7 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
                 }
 
                 // different check for alpha channel
+
                 if ($alpha_channel === true && $i === count($parts)) {
                     $result = $this->alpha->validate($part, $config, $context);
 
@@ -102,7 +108,7 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
                         return false;
                     }
 
-                    $new_parts[] = (string)$result;
+                    $new_parts[] = (string) $result;
                     continue;
                 }
 
@@ -128,10 +134,11 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
 
                 if ($current_type == 'integer') {
                     // Return value between range 0 -> $max_value
-                    $new_parts[] = (int)max(min($part, $max_value), 0);
-                } elseif ($current_type == 'percentage') {
-                    $new_parts[] = (float)max(min(rtrim($part, '%'), $max_value), 0) . '%';
+                    $new_parts[] = (int) max(min($part, $max_value), 0);
+                } else if ($current_type == 'percentage') {
+                    $new_parts[] = (float) max(min(rtrim($part, '%'), $max_value), 0) . '%';
                 }
+
             }
 
             $new_values = implode(',', $new_parts);
@@ -139,20 +146,26 @@ class HTMLPurifier_AttrDef_CSS_Color extends HTMLPurifier_AttrDef
             $color = $function . '(' . $new_values . ')';
         } else {
             // hexadecimal handling
+
             if ($color[0] === '#') {
                 $hex = substr($color, 1);
             } else {
                 $hex = $color;
                 $color = '#' . $color;
             }
+
             $length = strlen($hex);
+
             if ($length !== 3 && $length !== 6) {
                 return false;
             }
+
             if (!ctype_xdigit($hex)) {
                 return false;
             }
+
         }
+
         return $color;
     }
 

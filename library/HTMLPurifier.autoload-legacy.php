@@ -6,8 +6,8 @@
  *
  */
 
-spl_autoload_register(function($class)
-{
+spl_autoload_register(function ($class) {
+
      return HTMLPurifier_Bootstrap::autoload($class);
 });
 

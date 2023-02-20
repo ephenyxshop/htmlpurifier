@@ -3,8 +3,8 @@
 /**
  * Defines allowed child nodes and validates nodes against it.
  */
-abstract class HTMLPurifier_ChildDef
-{
+abstract class HTMLPurifier_ChildDef {
+
     /**
      * Type of child definition, usually right-most part of class name lowercase.
      * Used occasionally in terms of context.
@@ -25,7 +25,7 @@ abstract class HTMLPurifier_ChildDef
      * Lookup array of all elements that this definition could possibly allow.
      * @type array
      */
-    public $elements = array();
+    public $elements = [];
 
     /**
      * Get lookup of tag names that should not close this element automatically.
@@ -33,8 +33,8 @@ abstract class HTMLPurifier_ChildDef
      * @param HTMLPurifier_Config $config HTMLPurifier_Config object
      * @return array
      */
-    public function getAllowedElements($config)
-    {
+    public function getAllowedElements($config) {
+
         return $this->elements;
     }
 

@@ -3,8 +3,8 @@
 /**
  * Validates news (Usenet) as defined by generic RFC 1738
  */
-class HTMLPurifier_URIScheme_news extends HTMLPurifier_URIScheme
-{
+class HTMLPurifier_URIScheme_news extends HTMLPurifier_URIScheme {
+
     /**
      * @type bool
      */
@@ -21,8 +21,8 @@ class HTMLPurifier_URIScheme_news extends HTMLPurifier_URIScheme
      * @param HTMLPurifier_Context $context
      * @return bool
      */
-    public function doValidate(&$uri, $config, $context)
-    {
+    public function doValidate(&$uri, $config, $context) {
+
         $uri->userinfo = null;
         $uri->host = null;
         $uri->port = null;

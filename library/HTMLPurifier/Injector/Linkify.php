@@ -3,8 +3,8 @@
 /**
  * Injector that converts http, https and ftp text URLs to actual links.
  */
-class HTMLPurifier_Injector_Linkify extends HTMLPurifier_Injector
-{
+class HTMLPurifier_Injector_Linkify extends HTMLPurifier_Injector {
+
     /**
      * @type string
      */
@@ -13,13 +13,13 @@ class HTMLPurifier_Injector_Linkify extends HTMLPurifier_Injector
     /**
      * @type array
      */
-    public $needed = array('a' => array('href'));
+    public $needed = ['a' => ['href']];
 
     /**
      * @param HTMLPurifier_Token $token
      */
-    public function handleText(&$token)
-    {
+    public function handleText(&$token) {
+
         if (!$this->allowsElement('a')) {
             return;
         }
@@ -44,24 +44,31 @@ class HTMLPurifier_Injector_Linkify extends HTMLPurifier_Injector
             return;
         }
 
-        $token = array();
+        $token = [];
 
         // $i = index
         // $c = count
         // $l = is link
+
         for ($i = 0, $c = count($bits), $l = false; $i < $c; $i++, $l = !$l) {
+
             if (!$l) {
+
                 if ($bits[$i] === '') {
                     continue;
                 }
+
                 $token[] = new HTMLPurifier_Token_Text($bits[$i]);
             } else {
-                $token[] = new HTMLPurifier_Token_Start('a', array('href' => $bits[$i]));
+                $token[] = new HTMLPurifier_Token_Start('a', ['href' => $bits[$i]]);
                 $token[] = new HTMLPurifier_Token_Text($bits[$i]);
                 $token[] = new HTMLPurifier_Token_End('a');
             }
+
         }
+
     }
+
 }
 
 // vim: et sw=4 sts=4

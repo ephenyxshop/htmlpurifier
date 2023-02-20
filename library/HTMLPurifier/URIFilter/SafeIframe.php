@@ -6,8 +6,8 @@
  * @warning This filter is *critical* for ensuring that %HTML.SafeIframe
  * works safely.
  */
-class HTMLPurifier_URIFilter_SafeIframe extends HTMLPurifier_URIFilter
-{
+class HTMLPurifier_URIFilter_SafeIframe extends HTMLPurifier_URIFilter {
+
     /**
      * @type string
      */
@@ -30,8 +30,8 @@ class HTMLPurifier_URIFilter_SafeIframe extends HTMLPurifier_URIFilter
      * @param HTMLPurifier_Config $config
      * @return bool
      */
-    public function prepare($config)
-    {
+    public function prepare($config) {
+
         $this->regexp = $config->get('URI.SafeIframeRegexp');
         return true;
     }
@@ -42,27 +42,36 @@ class HTMLPurifier_URIFilter_SafeIframe extends HTMLPurifier_URIFilter
      * @param HTMLPurifier_Context $context
      * @return bool
      */
-    public function filter(&$uri, $config, $context)
-    {
+    public function filter(&$uri, $config, $context) {
+
         // check if filter not applicable
+
         if (!$config->get('HTML.SafeIframe')) {
             return true;
         }
+
         // check if the filter should actually trigger
+
         if (!$context->get('EmbeddedURI', true)) {
             return true;
         }
+
         $token = $context->get('CurrentToken', true);
+
         if (!($token && $token->name == 'iframe')) {
             return true;
         }
+
         // check if we actually have some whitelists enabled
+
         if ($this->regexp === null) {
             return false;
         }
+
         // actually check the whitelists
         return preg_match($this->regexp, $uri->toString());
     }
+
 }
 
 // vim: et sw=4 sts=4

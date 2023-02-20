@@ -3,8 +3,8 @@
 /**
  * Validates http (HyperText Transfer Protocol) as defined by RFC 2616
  */
-class HTMLPurifier_URIScheme_http extends HTMLPurifier_URIScheme
-{
+class HTMLPurifier_URIScheme_http extends HTMLPurifier_URIScheme {
+
     /**
      * @type int
      */
@@ -26,8 +26,8 @@ class HTMLPurifier_URIScheme_http extends HTMLPurifier_URIScheme
      * @param HTMLPurifier_Context $context
      * @return bool
      */
-    public function doValidate(&$uri, $config, $context)
-    {
+    public function doValidate(&$uri, $config, $context) {
+
         $uri->userinfo = null;
         return true;
     }

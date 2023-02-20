@@ -8,8 +8,8 @@
  *      to decode it first. The URI may not necessarily be well-formed until
  *      validate() is called.
  */
-class HTMLPurifier_URI
-{
+class HTMLPurifier_URI {
+
     /**
      * @type string
      */
@@ -55,12 +55,12 @@ class HTMLPurifier_URI
      * @param string $fragment
      * @note Automatically normalizes scheme and port
      */
-    public function __construct($scheme, $userinfo, $host, $port, $path, $query, $fragment)
-    {
+    public function __construct($scheme, $userinfo, $host, $port, $path, $query, $fragment) {
+
         $this->scheme = is_null($scheme) || ctype_lower($scheme) ? $scheme : strtolower($scheme);
         $this->userinfo = $userinfo;
         $this->host = $host;
-        $this->port = is_null($port) ? $port : (int)$port;
+        $this->port = is_null($port) ? $port : (int) $port;
         $this->path = $path;
         $this->query = $query;
         $this->fragment = $fragment;
@@ -72,29 +72,37 @@ class HTMLPurifier_URI
      * @param HTMLPurifier_Context $context
      * @return HTMLPurifier_URIScheme Scheme object appropriate for validating this URI
      */
-    public function getSchemeObj($config, $context)
-    {
+    public function getSchemeObj($config, $context) {
+
         $registry = HTMLPurifier_URISchemeRegistry::instance();
+
         if ($this->scheme !== null) {
             $scheme_obj = $registry->getScheme($this->scheme, $config, $context);
+
             if (!$scheme_obj) {
                 return false;
-            } // invalid scheme, clean it out
+            }
+            // invalid scheme, clean it out
         } else {
             // no scheme: retrieve the default one
             $def = $config->getDefinition('URI');
             $scheme_obj = $def->getDefaultScheme($config, $context);
+
             if (!$scheme_obj) {
+
                 if ($def->defaultScheme !== null) {
                     // something funky happened to the default scheme object
                     trigger_error(
                         'Default scheme object "' . $def->defaultScheme . '" was not readable',
                         E_USER_WARNING
                     );
-                } // suppress error if it's null
+                }
+                // suppress error if it's null
                 return false;
             }
+
         }
+
         return $scheme_obj;
     }
 
@@ -105,20 +113,23 @@ class HTMLPurifier_URI
      * @param HTMLPurifier_Context $context
      * @return bool True if validation/filtering succeeds, false if failure
      */
-    public function validate($config, $context)
-    {
+    public function validate($config, $context) {
+
         // ABNF definitions from RFC 3986
         $chars_sub_delims = '!$&\'()*+,;=';
         $chars_gen_delims = ':/?#[]@';
         $chars_pchar = $chars_sub_delims . ':@';
 
         // validate host
+
         if (!is_null($this->host)) {
             $host_def = new HTMLPurifier_AttrDef_URI_Host();
             $this->host = $host_def->validate($this->host, $config, $context);
+
             if ($this->host === false) {
                 $this->host = null;
             }
+
         }
 
         // validate scheme
@@ -127,31 +138,40 @@ class HTMLPurifier_URI
         // URI that we don't allow into one we do.  So instead, we just
         // check if the scheme can be dropped because there is no host
         // and it is our default scheme.
+
         if (!is_null($this->scheme) && is_null($this->host) || $this->host === '') {
             // support for relative paths is pretty abysmal when the
             // scheme is present, so axe it when possible
             $def = $config->getDefinition('URI');
+
             if ($def->defaultScheme === $this->scheme) {
                 $this->scheme = null;
             }
+
         }
 
         // validate username
+
         if (!is_null($this->userinfo)) {
             $encoder = new HTMLPurifier_PercentEncoder($chars_sub_delims . ':');
             $this->userinfo = $encoder->encode($this->userinfo);
         }
 
         // validate port
+
         if (!is_null($this->port)) {
+
             if ($this->port < 1 || $this->port > 65535) {
                 $this->port = null;
             }
+
         }
 
         // validate path
         $segments_encoder = new HTMLPurifier_PercentEncoder($chars_pchar . '/');
-        if (!is_null($this->host)) { // this catches $this->host === ''
+
+        if (!is_null($this->host)) {
+            // this catches $this->host === ''
             // path-abempty (hier and relative)
             // http://www.example.com/my/path
             // //www.example.com/my/path (looks odd, but works, and
@@ -161,11 +181,13 @@ class HTMLPurifier_URI
             // file:///my/path
             // ///my/path
             $this->path = $segments_encoder->encode($this->path);
-        } elseif ($this->path !== '') {
+        } else if ($this->path !== '') {
+
             if ($this->path[0] === '/') {
                 // path-absolute (hier and relative)
                 // http:/my/path
                 // /my/path
+
                 if (strlen($this->path) >= 2 && $this->path[1] === '/') {
                     // This could happen if both the host gets stripped
                     // out
@@ -175,7 +197,8 @@ class HTMLPurifier_URI
                 } else {
                     $this->path = $segments_encoder->encode($this->path);
                 }
-            } elseif (!is_null($this->scheme)) {
+
+            } else if (!is_null($this->scheme)) {
                 // path-rootless (hier)
                 // http:my/path
                 // Short circuit evaluation means we don't need to check nz
@@ -186,14 +209,17 @@ class HTMLPurifier_URI
                 // (once again, not checking nz)
                 $segment_nc_encoder = new HTMLPurifier_PercentEncoder($chars_sub_delims . '@');
                 $c = strpos($this->path, '/');
+
                 if ($c !== false) {
                     $this->path =
-                        $segment_nc_encoder->encode(substr($this->path, 0, $c)) .
-                        $segments_encoder->encode(substr($this->path, $c));
+                    $segment_nc_encoder->encode(substr($this->path, 0, $c)) .
+                    $segments_encoder->encode(substr($this->path, $c));
                 } else {
                     $this->path = $segment_nc_encoder->encode($this->path);
                 }
+
             }
+
         } else {
             // path-empty (hier and relative)
             $this->path = ''; // just to be safe
@@ -209,6 +235,7 @@ class HTMLPurifier_URI
         if (!is_null($this->fragment)) {
             $this->fragment = $qf_encoder->encode($this->fragment);
         }
+
         return true;
     }
 
@@ -216,22 +243,27 @@ class HTMLPurifier_URI
      * Convert URI back to string
      * @return string URI appropriate for output
      */
-    public function toString()
-    {
+    public function toString() {
+
         // reconstruct authority
         $authority = null;
         // there is a rendering difference between a null authority
         // (http:foo-bar) and an empty string authority
         // (http:///foo-bar).
+
         if (!is_null($this->host)) {
             $authority = '';
+
             if (!is_null($this->userinfo)) {
                 $authority .= $this->userinfo . '@';
             }
+
             $authority .= $this->host;
+
             if (!is_null($this->port)) {
                 $authority .= ':' . $this->port;
             }
+
         }
 
         // Reconstruct the result
@@ -241,16 +273,21 @@ class HTMLPurifier_URI
         // differently than http:///foo), so unfortunately we have to
         // defer to the schemes to do the right thing.
         $result = '';
+
         if (!is_null($this->scheme)) {
             $result .= $this->scheme . ':';
         }
+
         if (!is_null($authority)) {
             $result .= '//' . $authority;
         }
+
         $result .= $this->path;
+
         if (!is_null($this->query)) {
             $result .= '?' . $this->query;
         }
+
         if (!is_null($this->fragment)) {
             $result .= '#' . $this->fragment;
         }
@@ -270,15 +307,18 @@ class HTMLPurifier_URI
      * @param HTMLPurifier_Context $context
      * @return bool
      */
-    public function isLocal($config, $context)
-    {
+    public function isLocal($config, $context) {
+
         if ($this->host === null) {
             return true;
         }
+
         $uri_def = $config->getDefinition('URI');
+
         if ($uri_def->host === $this->host) {
             return true;
         }
+
         return false;
     }
 
@@ -292,25 +332,32 @@ class HTMLPurifier_URI
      * @param HTMLPurifier_Context $context
      * @return bool
      */
-    public function isBenign($config, $context)
-    {
+    public function isBenign($config, $context) {
+
         if (!$this->isLocal($config, $context)) {
             return false;
         }
 
         $scheme_obj = $this->getSchemeObj($config, $context);
+
         if (!$scheme_obj) {
             return false;
-        } // conservative approach
+        }
+        // conservative approach
 
         $current_scheme_obj = $config->getDefinition('URI')->getDefaultScheme($config, $context);
+
         if ($current_scheme_obj->secure) {
+
             if (!$scheme_obj->secure) {
                 return false;
             }
+
         }
+
         return true;
     }
+
 }
 
 // vim: et sw=4 sts=4

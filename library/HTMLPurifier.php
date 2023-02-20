@@ -19,22 +19,22 @@
  */
 
 /*
-    HTML Purifier 4.14.0 - Standards Compliant HTML Filtering
-    Copyright (C) 2006-2008 Edward Z. Yang
+HTML Purifier 4.14.0 - Standards Compliant HTML Filtering
+Copyright (C) 2006-2008 Edward Z. Yang
 
-    This library is free software; you can redistribute it and/or
-    modify it under the terms of the GNU Lesser General Public
-    License as published by the Free Software Foundation; either
-    version 2.1 of the License, or (at your option) any later version.
+This library is free software; you can redistribute it and/or
+modify it under the terms of the GNU Lesser General Public
+License as published by the Free Software Foundation; either
+version 2.1 of the License, or (at your option) any later version.
 
-    This library is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-    Lesser General Public License for more details.
+This library is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+Lesser General Public License for more details.
 
-    You should have received a copy of the GNU Lesser General Public
-    License along with this library; if not, write to the Free Software
-    Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
+You should have received a copy of the GNU Lesser General Public
+License along with this library; if not, write to the Free Software
+Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA
  */
 
 /**
@@ -51,8 +51,7 @@
  * @todo We need an easier way to inject strategies using the configuration
  *       object.
  */
-class HTMLPurifier
-{
+class HTMLPurifier {
 
     /**
      * Version of HTML Purifier.
@@ -76,7 +75,7 @@ class HTMLPurifier
      * for backwards compatibility.
      * @type HTMLPurifier_Filter[]
      */
-    private $filters = array();
+    private $filters = [];
 
     /**
      * Single instance of HTML Purifier.
@@ -111,8 +110,8 @@ class HTMLPurifier
      *                The parameter can also be any type that
      *                HTMLPurifier_Config::create() supports.
      */
-    public function __construct($config = null)
-    {
+    public function __construct($config = null) {
+
         $this->config = HTMLPurifier_Config::create($config);
         $this->strategy = new HTMLPurifier_Strategy_Core();
     }
@@ -122,8 +121,8 @@ class HTMLPurifier
      *
      * @param HTMLPurifier_Filter $filter HTMLPurifier_Filter object
      */
-    public function addFilter($filter)
-    {
+    public function addFilter($filter) {
+
         trigger_error(
             'HTMLPurifier->addFilter() is deprecated, use configuration directives' .
             ' in the Filter namespace or Filter.Custom',
@@ -143,8 +142,8 @@ class HTMLPurifier
      *
      * @return string Purified HTML
      */
-    public function purify($html, $config = null)
-    {
+    public function purify($html, $config = null) {
+
         // :TODO: make the config merge in, instead of replace
         $config = $config ? HTMLPurifier_Config::create($config) : $this->config;
 
@@ -159,6 +158,7 @@ class HTMLPurifier
         $context->register('Generator', $this->generator);
 
         // set up global context variables
+
         if ($config->get('Core.CollectErrors')) {
             // may get moved out if other facilities use it
             $language_factory = HTMLPurifier_LanguageFactory::instance();
@@ -180,21 +180,27 @@ class HTMLPurifier
         $filter_flags = $config->getBatch('Filter');
         $custom_filters = $filter_flags['Custom'];
         unset($filter_flags['Custom']);
-        $filters = array();
+        $filters = [];
+
         foreach ($filter_flags as $filter => $flag) {
+
             if (!$flag) {
                 continue;
             }
+
             if (strpos($filter, '.') !== false) {
                 continue;
             }
+
             $class = "HTMLPurifier_Filter_$filter";
             $filters[] = new $class;
         }
+
         foreach ($custom_filters as $filter) {
             // maybe "HTMLPurifier_Filter_$filter", but be consistent with AutoFormat
             $filters[] = $filter;
         }
+
         $filters = array_merge($filters, $this->filters);
         // maybe prepare(), but later
 
@@ -204,27 +210,27 @@ class HTMLPurifier
 
         // purified HTML
         $html =
-            $this->generator->generateFromTokens(
-                // list of tokens
-                $this->strategy->execute(
-                    // list of un-purified tokens
-                    $lexer->tokenizeHTML(
-                        // un-purified HTML
-                        $html,
-                        $config,
-                        $context
-                    ),
+        $this->generator->generateFromTokens(
+            // list of tokens
+            $this->strategy->execute(
+                // list of un-purified tokens
+                $lexer->tokenizeHTML(
+                    // un-purified HTML
+                    $html,
                     $config,
                     $context
-                )
-            );
+                ),
+                $config,
+                $context
+            )
+        );
 
         for ($i = $filter_size - 1; $i >= 0; $i--) {
             $html = $filters[$i]->postFilter($html, $config, $context);
         }
 
         $html = HTMLPurifier_Encoder::convertFromUTF8($html, $config, $context);
-        $this->context =& $context;
+        $this->context = &$context;
         return $html;
     }
 
@@ -237,18 +243,22 @@ class HTMLPurifier
      *
      * @return string[] Array of purified HTML
      */
-    public function purifyArray($array_of_html, $config = null)
-    {
-        $context_array = array();
-        $array = array();
-        foreach($array_of_html as $key=>$value){
+    public function purifyArray($array_of_html, $config = null) {
+
+        $context_array = [];
+        $array = [];
+
+        foreach ($array_of_html as $key => $value) {
+
             if (is_array($value)) {
                 $array[$key] = $this->purifyArray($value, $config);
             } else {
                 $array[$key] = $this->purify($value, $config);
             }
+
             $context_array[$key] = $this->context;
         }
+
         $this->context = $context_array;
         return $array;
     }
@@ -263,17 +273,20 @@ class HTMLPurifier
      *
      * @return HTMLPurifier
      */
-    public static function instance($prototype = null)
-    {
+    public static function instance($prototype = null) {
+
         if (!self::$instance || $prototype) {
+
             if ($prototype instanceof HTMLPurifier) {
                 self::$instance = $prototype;
-            } elseif ($prototype) {
+            } else if ($prototype) {
                 self::$instance = new HTMLPurifier($prototype);
             } else {
                 self::$instance = new HTMLPurifier();
             }
+
         }
+
         return self::$instance;
     }
 
@@ -288,10 +301,11 @@ class HTMLPurifier
      * @return HTMLPurifier
      * @note Backwards compatibility, see instance()
      */
-    public static function getInstance($prototype = null)
-    {
+    public static function getInstance($prototype = null) {
+
         return HTMLPurifier::instance($prototype);
     }
+
 }
 
 // vim: et sw=4 sts=4
