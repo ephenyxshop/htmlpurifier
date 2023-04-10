@@ -31,7 +31,7 @@ class HTMLPurifier_ChildDef_List extends HTMLPurifier_ChildDef {
     public function validateChildren($children, $config, $context) {
 
         // Flag for subclasses
-        $this->whitespace = false;
+        $whitespace = false;
 
         // if there are no tokens, delete parent node
 
